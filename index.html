@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF7F2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14171C" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Japan 2026">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Japan 2026</title>
+<style>
+:root{
+  --washi:#FAF7F2; --paper:#FFFFFF; --indigo:#2C4A6E;
+  --vermillion:#B95238; --matcha:#7D9471; --sumi:#2B2B2B; --muted:#767069;
+  --line:#E8E1D8; --line-soft:#F1EBE2; --tag-ink:#645E57;
+  --hero-a:#2C4A6E; --hero-b:#1E3450;
+  --chrome:rgba(250,247,242,.90);
+  --ring:rgba(44,74,110,.10);
+  --shadow:0 1px 2px rgba(43,43,43,.04), 0 4px 16px rgba(43,43,43,.05);
+  --hero-shadow:0 6px 22px rgba(30,52,80,.20);
+  --r:14px; --r-lg:20px;
+  --tab-h:calc(58px + env(safe-area-inset-bottom));
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+/* Night mode — for trains after dark and 1am jet lag. Same structure,
+   sumi-ink surfaces; the hero stays dark in both so its overlays hold. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --washi:#14171C; --paper:#1B1F26; --indigo:#8FB3D9;
+    --vermillion:#E8907A; --matcha:#9DB88C; --sumi:#E9E4DC; --muted:#A29B91;
+    --line:#2C323B; --line-soft:#232830; --tag-ink:#B9B2A7;
+    --hero-a:#25405F; --hero-b:#16202D;
+    --chrome:rgba(20,23,28,.90);
+    --ring:rgba(143,179,217,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.30), 0 4px 16px rgba(0,0,0,.24);
+    --hero-shadow:0 6px 22px rgba(0,0,0,.34);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;scroll-behavior:auto !important}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--washi); color:var(--sumi);
+  font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Roboto,sans-serif;
+  padding-bottom:var(--tab-h);
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em;line-height:1.25}
+a{color:var(--indigo);text-decoration:none}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:20;
+  background:var(--chrome);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line-soft);
+  padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
+}
+.h-row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.h-title{font-size:19px;font-weight:680}
+.h-sub{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stale{color:var(--vermillion);font-weight:640}
+
+/* ---------- layout ---------- */
+main{padding:16px 16px 28px;max-width:680px;margin:0 auto}
+.view{display:none;animation:rise .34s var(--ease) both}
+.view.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.stack>*+*{margin-top:12px}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 16px;box-shadow:var(--shadow);
+}
+.card.flat{box-shadow:none}
+.eyebrow{
+  font-size:10.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px;
+}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.xs{font-size:12px}
+
+/* hero */
+.hero{
+  background:linear-gradient(150deg,var(--hero-a) 0%,var(--hero-b) 100%);
+  color:#fff;border:none;border-radius:var(--r-lg);padding:20px;
+  box-shadow:var(--hero-shadow);
+}
+.hero .eyebrow{color:rgba(255,255,255,.62)}
+.hero h2{font-size:25px;margin-bottom:3px}
+.hero .sub{color:rgba(255,255,255,.78);font-size:14px}
+.countdown{
+  margin-top:15px;padding-top:14px;border-top:1px solid rgba(255,255,255,.16);
+  display:flex;align-items:center;gap:11px;
+}
+.cd-num{font-size:27px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.cd-lbl{font-size:12.5px;color:rgba(255,255,255,.78);line-height:1.35}
+.countdown.late .cd-num{
+  color:#FFC7B4;width:34px;height:34px;border-radius:50%;
+  background:rgba(255,140,110,.20);display:grid;place-items:center;font-size:21px;
+}
+.countdown.late .cd-lbl{color:#FFD6C7}
+.countdown.late .cd-lbl strong{color:#FFC7B4}
+
+/* anchors */
+.anchor{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.anchor:last-child{border-bottom:none;padding-bottom:0}
+.anchor:first-child{padding-top:0}
+.a-time{
+  font-variant-numeric:tabular-nums;font-weight:670;font-size:14.5px;
+  min-width:47px;color:var(--indigo);padding-top:1px;
+}
+.a-body{flex:1;min-width:0}
+.a-title{font-weight:600;font-size:15px}
+.a-note{font-size:13px;color:var(--muted);margin-top:3px}
+.hard{color:var(--vermillion)}
+.dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--vermillion);margin-right:6px;vertical-align:middle;
+}
+
+/* candidate rows */
+.item{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.item:last-child{border-bottom:none;padding-bottom:0}
+.item-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.item-title{font-weight:600;font-size:15px}
+.item-meta{font-size:12px;color:var(--muted);white-space:nowrap}
+.item-tip{font-size:13px;color:var(--muted);margin-top:4px}
+.tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+.tag{
+  font-size:10.5px;font-weight:600;letter-spacing:.03em;padding:3px 8px;border-radius:99px;
+  background:var(--line-soft);color:var(--tag-ink);
+}
+
+/* day list */
+.day{
+  display:flex;align-items:center;gap:13px;width:100%;text-align:left;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;box-shadow:var(--shadow);cursor:pointer;
+  font-family:inherit;font-size:16px;color:inherit;
+  transition:transform .16s var(--ease),border-color .16s;
+}
+.day:active{transform:scale(.985)}
+.day.now{border-color:var(--indigo);box-shadow:0 0 0 2.5px var(--ring),var(--shadow)}
+.day-date{text-align:center;min-width:38px}
+.day-dow{font-size:10px;font-weight:700;letter-spacing:.07em;color:var(--muted);text-transform:uppercase}
+.day-num{font-size:20px;font-weight:680;line-height:1.1;font-variant-numeric:tabular-nums}
+.day-mid{flex:1;min-width:0}
+.day-title{font-weight:620;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day-stay{font-size:12.5px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pip{width:8px;height:8px;border-radius:50%;flex:none}
+.pip.locked{background:var(--matcha)}
+.pip.partial{background:#D9A441}
+.pip.open{background:var(--line)}
+
+/* detail */
+.back{
+  display:inline-flex;align-items:center;gap:6px;background:none;border:none;
+  color:var(--indigo);font:inherit;font-size:14.5px;font-weight:600;
+  min-height:44px;padding:0 12px 0 0;margin-bottom:4px;cursor:pointer;
+}
+
+/* vault */
+.kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.kv:last-child{border-bottom:none;padding-bottom:0}
+.kv:first-child{padding-top:0}
+.kv-l{font-size:13.5px;color:var(--muted);flex:none}
+.kv-v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14.5px;font-weight:600;text-align:right;word-break:break-all}
+.copy{
+  background:var(--line-soft);border:none;border-radius:8px;color:var(--indigo);
+  font:inherit;font-size:11.5px;font-weight:700;padding:0 12px;margin-left:8px;min-height:44px;
+  cursor:pointer;flex:none;transition:background .15s;
+}
+.copy:active{background:var(--line)}
+.copy.done{background:#E6EFE4;color:#4E6647}
+
+/* buttons + inputs */
+.btn{
+  display:block;width:100%;background:var(--indigo);color:#fff;border:none;
+  border-radius:11px;padding:13px;font:inherit;font-size:15px;font-weight:640;
+  cursor:pointer;transition:transform .14s var(--ease),opacity .14s;
+}
+.btn:active{transform:scale(.985);opacity:.92}
+.btn.ghost{background:transparent;color:var(--vermillion);border:1px solid var(--line)}
+textarea{
+  width:100%;min-height:150px;border:1px solid var(--line);border-radius:11px;
+  padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;
+  background:var(--washi);color:var(--sumi);resize:vertical;
+}
+textarea:focus{outline:2px solid rgba(44,74,110,.28);outline-offset:-1px}
+
+/* phrases */
+.ph{padding:12px 0;border-bottom:1px solid var(--line-soft)}
+.ph:last-child{border-bottom:none;padding-bottom:0}
+.ph:first-child{padding-top:0}
+.ph-jp{font-size:22px;font-weight:600;line-height:1.35}
+.ph-r{font-size:13px;color:var(--indigo);margin-top:3px;font-weight:600}
+.ph-en{font-size:13px;color:var(--muted);margin-top:1px}
+
+/* checklist */
+.chk{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line-soft);cursor:pointer}
+.chk:last-child{border-bottom:none;padding-bottom:0}
+.chk:first-child{padding-top:0}
+.box{
+  width:21px;height:21px;border-radius:6px;border:1.5px solid var(--line);
+  flex:none;margin-top:1px;display:grid;place-items:center;
+  transition:background .16s,border-color .16s;
+}
+.chk.on .box{background:var(--matcha);border-color:var(--matcha)}
+.box svg{opacity:0;transition:opacity .16s}
+.chk.on .box svg{opacity:1}
+.chk.on .chk-t{text-decoration:line-through;color:var(--muted)}
+.chk-t{font-weight:600;font-size:14.5px}
+.chk-d{font-size:12.5px;color:var(--muted);margin-top:3px}
+.chk-due{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--vermillion);margin-top:4px;text-transform:uppercase}
+
+/* tab bar */
+nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;height:var(--tab-h);
+  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--chrome);
+  backdrop-filter:saturate(180%) blur(16px);
+  -webkit-backdrop-filter:saturate(180%) blur(16px);
+  border-top:1px solid var(--line);
+  display:flex;
+}
+.tab{
+  flex:1;background:none;border:none;font:inherit;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);font-size:10.5px;font-weight:640;letter-spacing:.02em;
+  transition:color .18s;padding:0;
+}
+.tab svg{width:21px;height:21px;stroke-width:1.9}
+.tab.on{color:var(--indigo)}
+:focus-visible{outline:2.5px solid var(--indigo);outline-offset:2px;border-radius:6px}
+.empty{text-align:center;color:var(--muted);font-size:14px;padding:26px 12px;line-height:1.6}
+
+/* ---------- photos ---------- */
+.pslot{
+  margin-top:9px;border:1.5px dashed var(--line);border-radius:11px;
+  min-height:46px;display:grid;place-items:center;cursor:pointer;
+  background:var(--washi);transition:border-color .16s,background .16s;
+  position:relative;overflow:hidden;
+}
+.pslot:active{background:var(--line-soft)}
+.pslot.over{border-color:var(--indigo);background:var(--line-soft)}
+.pslot-cta{font-size:12px;font-weight:650;color:var(--muted);letter-spacing:.02em}
+.pslot.filled{border:1px solid var(--line);min-height:0;aspect-ratio:16/10;display:block}
+.pslot.filled img{width:100%;height:100%;object-fit:cover;display:block}
+.pdel{
+  position:absolute;top:7px;right:7px;width:30px;height:30px;border-radius:50%;
+  border:none;background:rgba(20,23,28,.62);color:#fff;font-size:19px;line-height:1;
+  cursor:pointer;display:grid;place-items:center;backdrop-filter:blur(4px);
+}
+.lightbox{
+  position:fixed;inset:0;z-index:60;background:rgba(12,14,18,.94);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  padding:calc(20px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+}
+.lightbox.on{display:flex}
+.lightbox img{max-width:100%;max-height:76vh;border-radius:12px;object-fit:contain}
+.lb-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.lb-btn{
+  background:rgba(255,255,255,.13);border:none;color:#fff;font:inherit;font-size:14px;
+  font-weight:640;padding:0 18px;min-height:44px;border-radius:11px;cursor:pointer;
+}
+.lb-btn.danger{background:rgba(232,144,122,.22);color:#FFC7B4}
+.pmeta{font-size:11.5px;color:var(--muted);margin-top:9px;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-row">
+    <div class="h-title" id="hTitle">Japan 2026</div>
+    <div class="h-sub" id="hSub"></div>
+  </div>
+</header>
+
+<main>
+  <section id="v-now"   class="view on stack"></section>
+  <section id="v-days"  class="view stack"></section>
+  <section id="v-vault" class="view stack"></section>
+  <section id="v-ref"   class="view stack"></section>
+</main>
+
+<input type="file" id="pfile" accept="image/*" hidden>
+<div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Photo"></div>
+
+<nav>
+  <button class="tab on" data-v="now">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span>Now</span>
+  </button>
+  <button class="tab" data-v="days">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    <span>Days</span>
+  </button>
+  <button class="tab" data-v="vault">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+    <span>Vault</span>
+  </button>
+  <button class="tab" data-v="ref">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 016.5 3H19v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H19v3H6.5A2.5 2.5 0 014 20.5z"/></svg>
+    <span>Ref</span>
+  </button>
+</nav>
+
+<script src="data.js"></script>
+<script>
+/* ============================================================
+   STORAGE — append-only event log.
+   Ratings get built on top of logEvent() with zero refactor:
+   every entry is immutable, id'd, and timestamped.
+   Buckets: stay | activity | food | daytrip | day
+   ============================================================ */
+const DB = {
+  KEY_LOG:'jp26.log', KEY_CONF:'jp26.conf', KEY_CHK:'jp26.chk',
+  read(k,f){ try{ return JSON.parse(localStorage.getItem(k)) ?? f }catch(e){ return f } },
+  write(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){ alert('Storage full or blocked.') } },
+  log(){ return this.read(this.KEY_LOG,[]) },
+  logEvent(type,targetId,payload){
+    const all=this.log();
+    all.push({ id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),
+               ts:new Date().toISOString(), type, targetId, payload });
+    this.write(this.KEY_LOG,all); return all;
+  },
+  conf(){ return this.read(this.KEY_CONF,{}) },
+  setConf(o){ this.write(this.KEY_CONF,o) },
+  chk(){ return this.read(this.KEY_CHK,{}) },
+  toggle(id){ const c=this.chk(); c[id]=!c[id]; this.write(this.KEY_CHK,c); return c[id] },
+};
+
+/* ============================================================
+   PHOTOS — IndexedDB, not localStorage.
+   A 12MP iPhone shot is ~4MB; localStorage caps around 5MB total.
+   Everything is downscaled and re-encoded before it's stored, so
+   40+ photos stay well inside quota. Images live only on this
+   device — never in the repo, so no copyright question and no
+   personal data pushed to a public URL.
+   ============================================================ */
+const PHOTO = {
+  DB:'jp26-img', STORE:'img', _db:null, _urls:new Map(),
+
+  open(){
+    if(this._db) return Promise.resolve(this._db);
+    return new Promise((res,rej)=>{
+      const r=indexedDB.open(this.DB,1);
+      r.onupgradeneeded=()=>{ if(!r.result.objectStoreNames.contains(this.STORE)) r.result.createObjectStore(this.STORE); };
+      r.onsuccess=()=>{ this._db=r.result; res(this._db); };
+      r.onerror=()=>rej(r.error);
+    });
+  },
+  async _tx(mode){ const db=await this.open(); return db.transaction(this.STORE,mode).objectStore(this.STORE); },
+  async put(key,blob){ const s=await this._tx('readwrite'); return new Promise((res,rej)=>{ const q=s.put(blob,key); q.onsuccess=res; q.onerror=()=>rej(q.error); }); },
+  async get(key){ const s=await this._tx('readonly'); return new Promise(res=>{ const q=s.get(key); q.onsuccess=()=>res(q.result||null); q.onerror=()=>res(null); }); },
+  async del(key){ const s=await this._tx('readwrite'); return new Promise(res=>{ const q=s.delete(key); q.onsuccess=res; q.onerror=res; }); },
+  async keys(){ const s=await this._tx('readonly'); return new Promise(res=>{ const q=s.getAllKeys(); q.onsuccess=()=>res(q.result||[]); q.onerror=()=>res([]); }); },
+
+  /* Downscale + re-encode before storing. Without this, quota dies fast. */
+  shrink(file,max=1400,q=.82){
+    return new Promise((res,rej)=>{
+      if(!file || !/^image\//.test(file.type)) return rej(new Error('Not an image file.'));
+      const url=URL.createObjectURL(file), im=new Image();
+      im.onload=()=>{
+        URL.revokeObjectURL(url);
+        let w=im.naturalWidth, h=im.naturalHeight;
+        if(!w||!h) return rej(new Error('Could not read that image.'));
+        const scale=Math.min(1,max/Math.max(w,h));
+        w=Math.round(w*scale); h=Math.round(h*scale);
+        const c=document.createElement('canvas'); c.width=w; c.height=h;
+        c.getContext('2d').drawImage(im,0,0,w,h);
+        c.toBlob(b=>b?res(b):rej(new Error('Could not encode that image.')),'image/jpeg',q);
+      };
+      im.onerror=()=>{ URL.revokeObjectURL(url); rej(new Error('Could not read that image.')); };
+      im.src=url;
+    });
+  },
+  async add(key,file){ const blob=await this.shrink(file); await this.put(key,blob); return blob; },
+
+  /* Object URLs are revoked on re-render so long sessions don't leak. */
+  url(key,blob){ const old=this._urls.get(key); if(old) URL.revokeObjectURL(old);
+    const u=URL.createObjectURL(blob); this._urls.set(key,u); return u; },
+  release(){ this._urls.forEach(u=>URL.revokeObjectURL(u)); this._urls.clear(); },
+
+  async usage(){
+    if(!navigator.storage?.estimate) return null;
+    const {usage=0,quota=0}=await navigator.storage.estimate();
+    return {mb:(usage/1048576).toFixed(1), quotaMb:(quota/1048576).toFixed(0)};
+  },
+};
+
+/* One hidden input drives every slot — iOS shows Photo Library / Take Photo. */
+let _pendingKey=null;
+function photoSlot(key,label){
+  return `<div class="pslot" data-pslot="${esc(key)}" role="button" tabindex="0"
+     aria-label="Add photo for ${esc(label||key)}"><span class="pslot-cta">+ photo</span></div>`;
+}
+
+/* Fill slots that already have an image, after innerHTML is set. */
+async function paintPhotos(root){
+  const slots=[...root.querySelectorAll('[data-pslot]')];
+  for(const el of slots){
+    const key=el.dataset.pslot;
+    const blob=await PHOTO.get(key);
+    if(!blob) continue;
+    el.classList.add('filled');
+    el.innerHTML=`<img src="${PHOTO.url(key,blob)}" alt="" loading="lazy">
+      <button class="pdel" data-pdel="${esc(key)}" aria-label="Remove photo">&times;</button>`;
+  }
+}
+
+function wirePhotos(root,rerender){
+  const pick=$('#pfile');
+  const take=async(key,file)=>{
+    try{ await PHOTO.add(key,file); rerender(); }
+    catch(e){ alert(e.message||'Could not add that image.'); }
+  };
+  root.querySelectorAll('[data-pslot]').forEach(el=>{
+    const key=el.dataset.pslot;
+    el.addEventListener('click',e=>{
+      if(e.target.closest('[data-pdel]')) return;
+      if(el.classList.contains('filled')) return openLightbox(key,rerender);
+      _pendingKey=key; pick.value=''; pick.click();
+    });
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+    el.addEventListener('dragover',e=>{ e.preventDefault(); el.classList.add('over'); });
+    el.addEventListener('dragleave',()=>el.classList.remove('over'));
+    el.addEventListener('drop',e=>{
+      e.preventDefault(); el.classList.remove('over');
+      const f=e.dataTransfer?.files?.[0]; if(f) take(key,f);
+    });
+  });
+  root.querySelectorAll('[data-pdel]').forEach(b=>{
+    b.onclick=async e=>{ e.stopPropagation();
+      if(confirm('Remove this photo?')){ await PHOTO.del(b.dataset.pdel); rerender(); } };
+  });
+}
+
+function openLightbox(key,rerender){
+  PHOTO.get(key).then(blob=>{
+    if(!blob) return;
+    const box=$('#lightbox');
+    box.innerHTML=`<img src="${URL.createObjectURL(blob)}" alt="">
+      <div class="lb-bar">
+        <button class="lb-btn" id="lbReplace">Replace</button>
+        <button class="lb-btn danger" id="lbDel">Remove</button>
+        <button class="lb-btn" id="lbClose">Done</button>
+      </div>`;
+    box.classList.add('on');
+    $('#lbClose').onclick=()=>box.classList.remove('on');
+    box.onclick=e=>{ if(e.target===box) box.classList.remove('on'); };
+    $('#lbReplace').onclick=()=>{ _pendingKey=key; const p=$('#pfile'); p.value=''; p.click(); box.classList.remove('on'); };
+    $('#lbDel').onclick=async()=>{ await PHOTO.del(key); box.classList.remove('on'); rerender(); };
+  });
+}
+
+/* ---------- helpers ---------- */
+const $  = (s,r=document)=>r.querySelector(s);
+const esc= s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const parseD = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const todayISO = () => { const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')}` };
+const stayOf = id => TRIP.stays.find(s=>s.id===id);
+
+/* ============================================================ NOW */
+function renderNow(){
+  const t=todayISO();
+  const days=TRIP.days;
+  let day = days.find(d=>d.date===t);
+  const upcoming = days.filter(d=>d.date>=t);
+  const pre  = !day && upcoming.length>0;
+  const post = !day && upcoming.length===0;
+  const target = day || upcoming[0] || days[days.length-1];
+
+  let h='';
+
+  /* trip is over — don't pretend it's still the last day */
+  if(post){
+    const rated=DB.log().filter(e=>e.type==='rating').length;
+    $('#v-now').innerHTML=`<div class="hero">
+        <div class="eyebrow">Japan 2026</div>
+        <h2>Trip complete</h2>
+        <div class="sub">Aug 10 – 23 · 14 days</div>
+      </div>
+      <div class="card"><div class="eyebrow">What's here</div>
+        <div class="small">${rated} rating${rated===1?'':'s'} logged. Every day, stay and note is still in <strong>Days</strong> — nothing is cleared.</div>
+      </div>`;
+    return;
+  }
+
+  /* hero */
+  const stay = target.stayId ? stayOf(target.stayId) : null;
+  const dd = parseD(target.date);
+  if(pre){
+    const out=Math.ceil((parseD(upcoming[0].date)-parseD(t))/864e5);
+    h+=`<div class="hero">
+      <div class="eyebrow">Departure</div>
+      <h2>${out} day${out===1?'':'s'} out</h2>
+      <div class="sub">First move: ${esc(target.title)} · ${DOW[dd.getDay()]} ${dd.getMonth()+1}/${dd.getDate()}</div>
+      ${heroCountdown()}
+    </div>`;
+  } else {
+    h+=`<div class="hero">
+      <div class="eyebrow">${DOW[dd.getDay()]} ${dd.getMonth()+1}/${dd.getDate()} · Today</div>
+      <h2>${esc(target.title)}</h2>
+      <div class="sub">${stay?esc(stay.name)+' · '+esc(stay.area):'In transit'}</div>
+      ${heroCountdown()}
+    </div>`;
+  }
+
+  /* today's anchors */
+  if(target.anchors?.length){
+    h+=`<div class="card"><div class="eyebrow">${pre?'First fixed points':'Fixed today'}</div>`;
+    target.anchors.forEach(a=>{
+      h+=`<div class="anchor">
+        <div class="a-time ${a.hard?'hard':''}">${esc(a.time)}</div>
+        <div class="a-body">
+          <div class="a-title">${a.hard?'<span class="dot"></span>':''}${esc(a.title)}</div>
+          ${a.note?`<div class="a-note">${esc(a.note)}</div>`:''}
+        </div></div>`;
+    });
+    h+=`</div>`;
+  }
+
+  /* next irreversibles */
+  const now=new Date(), done=DB.chk();
+  const live=TRIP.irreversibles.filter(i=>!done[i.id] && new Date(i.due)>=new Date(now-864e5)).slice(0,4);
+  if(live.length){
+    h+=`<div class="card"><div class="eyebrow">Don't miss</div>`;
+    live.forEach(i=>h+=chkRow(i,done[i.id]));
+    h+=`</div>`;
+  }
+
+  /* today's candidates */
+  if(target.candidates?.length){
+    h+=`<div class="card"><div class="eyebrow">On the menu</div>`;
+    target.candidates.forEach(c=>h+=itemRow(c));
+    h+=`</div>`;
+  }
+  if(target.notes) h+=`<div class="card flat small muted">${esc(target.notes)}</div>`;
+
+  $('#v-now').innerHTML=h; wireChk($('#v-now'));
+}
+
+function heroCountdown(){
+  const done=DB.chk(), now=new Date();
+  const open=TRIP.irreversibles.filter(i=>!done[i.id])
+                               .sort((a,b)=>new Date(a.due)-new Date(b.due));
+  if(!open.length) return '';
+
+  // Anything past due and still unticked outranks anything upcoming.
+  const late=open.filter(i=>new Date(i.due)<now);
+  if(late.length) return `<div class="countdown late">
+    <div class="cd-num">!</div>
+    <div class="cd-lbl"><strong>Overdue${late.length>1?` · ${late.length} open`:''}</strong><br>${esc(late[0].title)}</div>
+  </div>`;
+
+  const nxt=open[0];
+  const hrs=Math.round((new Date(nxt.due)-now)/36e5);
+  const days=Math.round(hrs/24);
+  const [n,l] = hrs<48 ? [hrs, hrs===1?'hour':'hours'] : [days, days===1?'day':'days'];
+  return `<div class="countdown">
+    <div class="cd-num">${n}</div>
+    <div class="cd-lbl"><strong>${l}</strong> until<br>${esc(nxt.title)}</div>
+  </div>`;
+}
+
+function chkRow(i,on){
+  const d=new Date(i.due);
+  return `<div class="chk ${on?'on':''}" data-chk="${i.id}"
+       role="checkbox" aria-checked="${on?'true':'false'}" tabindex="0">
+    <div class="box" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <div style="flex:1;min-width:0">
+      <div class="chk-t">${esc(i.title)}</div>
+      <div class="chk-d">${esc(i.detail)}</div>
+      <div class="chk-due">by ${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}</div>
+    </div></div>`;
+}
+function itemRow(c,photo){
+  return `<div class="item">
+    <div class="item-top">
+      <div class="item-title">${c.link?`<a href="${esc(c.link)}" target="_blank" rel="noopener">${esc(c.title)}</a>`:esc(c.title)}</div>
+      <div class="item-meta">${esc(c.cost||'')}</div>
+    </div>
+    ${c.walk?`<div class="item-tip">${esc(c.walk)}</div>`:''}
+    ${c.tip?`<div class="item-tip">${esc(c.tip)}</div>`:''}
+    ${c.tags?.length?`<div class="tags">${c.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    ${photo&&c.id?photoSlot(c.id,c.title):''}
+  </div>`;
+}
+function wireChk(root){
+  root.querySelectorAll('[data-chk]').forEach(el=>{
+    const flip=()=>{
+      const on=DB.toggle(el.dataset.chk);
+      el.classList.toggle('on',on);
+      el.setAttribute('aria-checked',on?'true':'false');
+      renderNow();
+    };
+    el.onclick=flip;
+    el.onkeydown=e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); flip(); } };
+  });
+}
+
+/* ============================================================ DAYS */
+function renderDays(){
+  const t=todayISO();
+  let h=`<div class="stack">`;
+  TRIP.days.forEach((d,i)=>{
+    const dd=parseD(d.date), s=d.stayId?stayOf(d.stayId):null;
+    h+=`<button class="day ${d.date===t?'now':''}" data-day="${i}">
+      <div class="day-date"><div class="day-dow">${DOW[dd.getDay()]}</div><div class="day-num">${dd.getDate()}</div></div>
+      <div class="day-mid">
+        <div class="day-title">${esc(d.title)}</div>
+        <div class="day-stay">${s?esc(s.name):'In transit'}</div>
+      </div>
+      <div class="pip ${d.status}"></div>
+    </button>`;
+  });
+  h+=`</div><div class="card flat xs muted" style="margin-top:14px">
+    <span class="pip locked" style="display:inline-block;margin-right:6px"></span>locked &nbsp;
+    <span class="pip partial" style="display:inline-block;margin:0 6px 0 10px"></span>partial &nbsp;
+    <span class="pip open" style="display:inline-block;margin:0 6px 0 10px"></span>open
+  </div>`;
+  $('#v-days').innerHTML=h;
+  $('#v-days').querySelectorAll('[data-day]').forEach(b=>b.onclick=()=>dayDetail(+b.dataset.day));
+}
+
+function dayDetail(i){
+  const d=TRIP.days[i], dd=parseD(d.date), s=d.stayId?stayOf(d.stayId):null;
+  let h=`<button class="back" id="bk">&larr; All days</button>
+  <div class="card">
+    <div class="eyebrow">${DOW[dd.getDay()]} · Aug ${dd.getDate()}</div>
+    <h2 style="font-size:22px">${esc(d.title)}</h2>
+    ${s?`<div class="small muted" style="margin-top:5px">${esc(s.name)} — ${esc(s.area)}</div>`:''}
+  </div>`;
+
+  if(d.anchors?.length){
+    h+=`<div class="card"><div class="eyebrow">Fixed</div>`;
+    d.anchors.forEach((a,ai)=>h+=`<div class="anchor">
+      <div class="a-time ${a.hard?'hard':''}">${esc(a.time)}</div>
+      <div class="a-body"><div class="a-title">${a.hard?'<span class="dot"></span>':''}${esc(a.title)}</div>
+      ${a.note?`<div class="a-note">${esc(a.note)}</div>`:''}
+      ${photoSlot(`anchor:${d.date}:${ai}`,a.title)}</div></div>`);
+    h+=`</div>`;
+  }
+  if(d.candidates?.length){
+    h+=`<div class="card"><div class="eyebrow">Planned / candidates</div>`;
+    d.candidates.forEach(c=>h+=itemRow(c,true)); h+=`</div>`;
+  }
+  if(d.bench?.length){
+    h+=`<div class="card"><div class="eyebrow">Bench</div>`;
+    d.bench.forEach(b=>h+=`<div class="item">
+      <div class="item-title">${esc(b.alt)}</div>
+      <div class="item-tip">${esc(b.why)}</div></div>`);
+    h+=`</div>`;
+  }
+  if(!d.candidates?.length && !d.anchors?.length)
+    h+=`<div class="card"><div class="empty">Nothing mapped yet.<br>Add it to <code>data.js</code>.</div></div>`;
+  if(d.notes) h+=`<div class="card flat small muted">${esc(d.notes)}</div>`;
+
+  $('#v-days').innerHTML=h;
+  $('#bk').onclick=renderDays;
+  const root=$('#v-days');
+  paintPhotos(root).then(()=>wirePhotos(root,()=>dayDetail(i)));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================ VAULT */
+function renderVault(){
+  const c=DB.conf(), has=Object.keys(c).length;
+  let h='';
+  if(has){
+    h+=`<div class="card"><div class="eyebrow">Confirmations · on this device only</div>`;
+    TRIP.confirmationFields.forEach(f=>{
+      if(!c[f.key]) return;
+      h+=`<div class="kv">
+        <div class="kv-l">${esc(f.label)}</div>
+        <div style="display:flex;align-items:center;justify-content:flex-end;min-width:0">
+          <div class="kv-v">${esc(c[f.key])}</div>
+          <button class="copy" data-copy="${esc(c[f.key])}">Copy</button>
+        </div></div>`;
+    });
+    h+=`</div>
+    <div class="card flat xs muted">Stored in this browser only. Never committed to the repo, never leaves the device.</div>
+    <button class="btn ghost" id="clr">Clear from this device</button>`;
+  } else {
+    h+=`<div class="card">
+      <div class="eyebrow">One-time setup</div>
+      <p class="small" style="margin:0 0 12px">Paste the contents of <code>SEED-CONFIRMATIONS.json</code> below. It saves to this device only — nothing is uploaded, and none of it is in the public repo.</p>
+      <textarea id="seed" placeholder='{ "jal": "...", "parkhotel": "..." }'></textarea>
+      <div style="height:10px"></div>
+      <button class="btn" id="save">Save to this device</button>
+    </div>`;
+  }
+  h+=`<div class="card"><div class="eyebrow">Stays</div>`;
+  TRIP.stays.forEach(s=>{
+    const i=parseD(s.in), o=parseD(s.out);
+    h+=`<div class="item">
+      <div class="item-top">
+        <div class="item-title"><a href="${esc(s.map)}" target="_blank" rel="noopener">${esc(s.name)}</a></div>
+        <div class="item-meta">${i.getMonth()+1}/${i.getDate()}–${o.getMonth()+1}/${o.getDate()}</div>
+      </div>
+      <div class="item-tip">${esc(s.area)} · in ${esc(s.checkIn)} / out ${esc(s.checkOut)}</div>
+      ${s.note?`<div class="item-tip">${esc(s.note)}</div>`:''}
+      ${photoSlot(s.id,s.name)}
+    </div>`;
+  });
+  h+=`</div><div class="pmeta" id="pUse"></div>`;
+
+  $('#v-vault').innerHTML=h;
+  paintPhotos($('#v-vault')).then(()=>wirePhotos($('#v-vault'),renderVault));
+  PHOTO.usage().then(u=>{ const el=$('#pUse');
+    if(el&&u) el.textContent=`Photos stored on this device · ${u.mb} MB used of ~${u.quotaMb} MB available`; });
+  const save=$('#save');
+  if(save) save.onclick=()=>{
+    try{
+      const o=JSON.parse($('#seed').value);
+      if(typeof o!=='object'||Array.isArray(o)) throw 0;
+      DB.setConf(o); renderVault();
+    }catch(e){ alert('That is not valid JSON. Copy the whole file including the { }.') }
+  };
+  const clr=$('#clr');
+  if(clr) clr.onclick=()=>{ if(confirm('Remove all confirmation numbers from this device?')){ DB.setConf({}); renderVault(); } };
+  $('#v-vault').querySelectorAll('[data-copy]').forEach(b=>{
+    b.onclick=async()=>{
+      try{ await navigator.clipboard.writeText(b.dataset.copy) }catch(e){}
+      b.textContent='Copied'; b.classList.add('done');
+      setTimeout(()=>{ b.textContent='Copy'; b.classList.remove('done') },1400);
+    };
+  });
+}
+
+/* ============================================================ REF */
+function renderRef(){
+  let h='';
+  TRIP.reference.cards.forEach((c,ci)=>{
+    h+=`<div class="card"><div class="eyebrow">${esc(c.title)}</div><div class="small">${esc(c.body)}</div>
+        ${photoSlot(`ref:${ci}`,c.title)}</div>`;
+  });
+  h+=`<div class="card"><div class="eyebrow">Phrases · show the screen, don't pronounce it</div>`;
+  TRIP.reference.phrases.forEach(p=>{
+    h+=`<div class="ph"><div class="ph-jp" lang="ja">${esc(p.jp)}</div><div class="ph-r">${esc(p.romaji)}</div><div class="ph-en">${esc(p.en)}</div></div>`;
+  });
+  h+=`</div>`;
+
+  const done=DB.chk();
+  h+=`<div class="card"><div class="eyebrow">All deadlines</div>`;
+  TRIP.irreversibles.forEach(i=>h+=chkRow(i,done[i.id]));
+  h+=`</div>`;
+
+  $('#v-ref').innerHTML=h;
+  wireChk($('#v-ref'));
+  paintPhotos($('#v-ref')).then(()=>wirePhotos($('#v-ref'),renderRef));
+}
+
+/* ============================================================ SHELL */
+function setView(v){
+  PHOTO.release();
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b=>{
+    const on=b.dataset.v===v;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-current',on?'page':'false');
+  });
+  $('#v-'+v).classList.add('on');
+  ({now:renderNow,days:renderDays,vault:renderVault,ref:renderRef})[v]();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+
+(function boot(){
+  const t=todayISO();
+  const idx=TRIP.days.findIndex(d=>d.date===t);
+  $('#hTitle').textContent=TRIP.meta.title;
+
+  const where = idx>=0 ? `Day ${idx+1} of ${TRIP.days.length}`
+    : (t<TRIP.days[0].date ? 'Not started' : 'Complete');
+  const s=TRIP.meta.synced;
+  if(s){
+    const [dpart,tpart='']=s.trim().split(/\s+/);
+    const sd=parseD(dpart);
+    const age=Math.floor((parseD(t)-sd)/864e5);
+    const hhmm=tpart?` ${tpart}`:'';
+    const label=`synced ${sd.getMonth()+1}/${sd.getDate()}${hhmm}`;
+    $('#hSub').innerHTML = age>3
+      ? `${where} · <span class="stale">${label} · ${age}d old</span>`
+      : `${where} · ${label}`;
+  } else $('#hSub').textContent=where;
+  setView('now');
+
+  /* One input serves every photo slot in the app. */
+  $('#pfile').addEventListener('change',async e=>{
+    const f=e.target.files?.[0], key=_pendingKey; _pendingKey=null;
+    if(!f||!key) return;
+    try{
+      await PHOTO.add(key,f);
+      const on=document.querySelector('.view.on')?.id;
+      ({ 'v-vault':renderVault, 'v-ref':renderRef }[on] || (()=>{
+        const m=key.match(/^anchor:(\d{4}-\d{2}-\d{2}):/);
+        const idx=m?TRIP.days.findIndex(d=>d.date===m[1])
+                  :TRIP.days.findIndex(d=>(d.candidates||[]).some(c=>c.id===key));
+        idx>=0?dayDetail(idx):renderDays();
+      }))();
+    }catch(err){ alert(err.message||'Could not add that image.'); }
+  });
+
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden && $('#v-now').classList.contains('on')) renderNow(); });
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

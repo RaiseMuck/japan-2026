@@ -1,0 +1,6 @@
+# NEVER commit personal booking data to a public repo.
+# This file is pasted into the app once, on the phone, and lives
+# only in that device's localStorage.
+SEED-CONFIRMATIONS.json
+
+.DS_Store
