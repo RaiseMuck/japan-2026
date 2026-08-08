@@ -28,7 +28,7 @@ const TRIP = {
        Shown in the header, turns red after 3 days. With planning running
        across several chats, this is the only signal that the dashboard
        has fallen behind the vault. */
-    synced: "2026-08-08 22:15",
+    synced: "2026-08-08 22:40",
   },
 
   /* ---------- STAYS (rateable: bucket "stay") ---------- */
@@ -171,7 +171,7 @@ const TRIP = {
       bench: [
         { replaces: "dt-asuka", alt: "Minoh Falls — half-day (Hankyu from Umeda ~30 min, then paved 45-min walk each way)", why: "If a lighter day is wanted. Monkeys, shrines, waterfall — and the standing fallback for the trip's thin 'hike' category." },
       ],
-      notes: "Good half-day. Covers Kate's 'nature' non-negotiable.",
+      notes: "Good half-day. Covers the 'nature' non-negotiable.",
     },
     {
       date: "2026-08-17", stayId: "stay-onomichi", title: "Osaka → Himeji → Onomichi", status: "locked",
@@ -226,7 +226,7 @@ const TRIP = {
         { id: "act-ameyoko", bucket: "activity", title: "Ameyoko", walk: "7–8 min from the park", cost: "¥", tags: ["shopping","food-stalls"], tip: "Afternoon. 400+ stores, menchi katsu and sweets — covers lunch too.", link: "https://maps.google.com/?q=Ameyoko" },
       ],
       bench: [],
-      notes: "The one genuinely free day — and it's now full. Kate was completing the Motoyama booking via Tabelog; worth confirming it actually went through.",
+      notes: "The one genuinely free day — and it's now full. The Motoyama booking was being completed via Tabelog; worth confirming it went through.",
     },
     {
       date: "2026-08-22", stayId: "stay-ueno", title: "Last full day", status: "partial",
@@ -255,7 +255,7 @@ const TRIP = {
      Things that cost real money or break the trip if missed.  */
   irreversibles: [
     { id: "irr-maps",      due: "2026-08-09T08:00", title: "Download offline Google Maps", detail: "Tokyo, Osaka, Onomichi, Nikko. Your backstop underground, independent of cellular." },
-    { id: "irr-motoyama",  due: "2026-08-20T12:00", title: "Confirm Yakiniku Motoyama booking", detail: "Aug 21, 7:00 PM, Nagomi course. Kate was completing it via Tabelog — verify it actually went through. The trip's one splurge dinner." },
+    { id: "irr-motoyama",  due: "2026-08-20T12:00", title: "Confirm Yakiniku Motoyama booking", detail: "Aug 21, 7:00 PM, Nagomi course. Being booked via Tabelog — verify it actually went through. The trip's one splurge dinner." },
     { id: "irr-onomichi",  due: "2026-08-16T12:00", title: "Onomichi self check-in form + passport upload", detail: "Check-in CODE only sends 9am Japan time on Aug 17, and only after this is verified. Do not leave this." },
     { id: "irr-fwd1",      due: "2026-08-15T12:00", title: "Forward suitcase → Yamato Onomichi Shotengai", detail: "From the Hommachi front desk, HOLD FOR PICKUP. The Airbnb cannot receive a Yamato delivery." },
     { id: "irr-fwd2",      due: "2026-08-18T17:00", title: "Forward suitcase → NOHGA Ueno", detail: "Drop at Yamato Shotengai or any konbini. NOHGA holds parcels sent ahead of check-in." },
@@ -302,7 +302,7 @@ const TRIP = {
       },
       {
         title: "Money",
-        body: "Suica via Apple Pay — top up with a foreign card, no physical card needed. Carry ¥30,000–50,000 cash; rural buses, small restaurants and temples are frequently cash-only. 7-Eleven ATMs reliably take foreign cards. Kate's card for card-payable spend, your Schwab debit as the cash source.",
+        body: "Suica via Apple Pay — top up with a foreign card, no physical card needed. Carry ¥30,000–50,000 cash; rural buses, small restaurants and temples are frequently cash-only. 7-Eleven ATMs reliably take foreign cards. No-FX-fee credit card for card-payable spend; the fee-free debit card is the cash source.",
       },
       {
         title: "Obon — Aug 13–16",
@@ -313,7 +313,7 @@ const TRIP = {
         body: "Takkyubin ¥1,600–3,700/bag. Forward Tokyo→Osaka on Aug 10 or 11, NOT the morning you leave — standard delivery is next-day-to-two-days. Onomichi is an Airbnb: it cannot receive a Yamato delivery, so send hold-for-pickup to the Shotengai branch. Keep passport, valuables, electronics and meds with you always. Coin lockers ¥400–700/day.",
       },
       {
-        title: "Kate's non-negotiables",
+        title: "Non-negotiables",
         body: "Temple · Hike · See Mt Fuji · Gardens · Nature. Covered: temples (Toshogu, Senkoji, Tōdai-ji), gardens (Hamarikyu), nature (Asuka, Minoh, Onomichi hillside). THIN: dedicated hike — Shimanami Kaido and Minoh Falls are the fallbacks. Fuji rests on the seat-E Shinkansen legs, not on a day trip.",
       },
     ],
