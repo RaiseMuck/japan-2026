@@ -246,6 +246,9 @@ nav{
 .empty{text-align:center;color:var(--muted);font-size:14px;padding:26px 12px;line-height:1.6}
 
 /* ---------- photos ---------- */
+/* NOT display:none — iOS Safari won't open the picker for a hidden input.
+   Must stay rendered, just out of sight. */
+.offscreen{position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
 .pslot{
   margin-top:9px;border:1.5px dashed var(--line);border-radius:11px;
   min-height:46px;display:grid;place-items:center;cursor:pointer;
@@ -294,7 +297,7 @@ nav{
   <section id="v-ref"   class="view stack"></section>
 </main>
 
-<input type="file" id="pfile" accept="image/*" hidden>
+<input type="file" id="pfile" accept="image/*" class="offscreen">
 <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Photo"></div>
 
 <nav>
@@ -355,10 +358,13 @@ const PHOTO = {
   open(){
     if(this._db) return Promise.resolve(this._db);
     return new Promise((res,rej)=>{
-      const r=indexedDB.open(this.DB,1);
+      if(typeof indexedDB==='undefined') return rej(new Error('Photo storage unavailable in this browser.'));
+      let r;
+      try{ r=indexedDB.open(this.DB,1); }catch(e){ return rej(e); }
       r.onupgradeneeded=()=>{ if(!r.result.objectStoreNames.contains(this.STORE)) r.result.createObjectStore(this.STORE); };
       r.onsuccess=()=>{ this._db=r.result; res(this._db); };
-      r.onerror=()=>rej(r.error);
+      r.onerror=()=>rej(r.error||new Error('Could not open photo storage.'));
+      r.onblocked=()=>rej(new Error('Photo storage blocked — close other tabs of this app.'));
     });
   },
   async _tx(mode){ const db=await this.open(); return db.transaction(this.STORE,mode).objectStore(this.STORE); },
@@ -407,20 +413,27 @@ function photoSlot(key,label){
      aria-label="Add photo for ${esc(label||key)}"><span class="pslot-cta">+ photo</span></div>`;
 }
 
-/* Fill slots that already have an image, after innerHTML is set. */
-async function paintPhotos(root){
-  const slots=[...root.querySelectorAll('[data-pslot]')];
-  for(const el of slots){
+/* Fill slots that already have an image. Never allowed to throw — a storage
+   failure must not stop the slots from being clickable. */
+async function paintPhotos(root,rerender){
+  for(const el of [...root.querySelectorAll('[data-pslot]')]){
     const key=el.dataset.pslot;
-    const blob=await PHOTO.get(key);
+    let blob=null;
+    try{ blob=await PHOTO.get(key); }catch(e){ continue; }
     if(!blob) continue;
     el.classList.add('filled');
     el.innerHTML=`<img src="${PHOTO.url(key,blob)}" alt="" loading="lazy">
       <button class="pdel" data-pdel="${esc(key)}" aria-label="Remove photo">&times;</button>`;
+    el.querySelector('[data-pdel]').onclick=async ev=>{
+      ev.stopPropagation();
+      if(confirm('Remove this photo?')){ await PHOTO.del(key); rerender&&rerender(); }
+    };
   }
 }
 
-function wirePhotos(root,rerender){
+/* Wire FIRST (synchronous, can't fail), paint after. If storage is broken
+   the slots still respond — you get a real error instead of a dead button. */
+function initPhotos(root,rerender){
   const pick=$('#pfile');
   const take=async(key,file)=>{
     try{ await PHOTO.add(key,file); rerender(); }
@@ -431,21 +444,23 @@ function wirePhotos(root,rerender){
     el.addEventListener('click',e=>{
       if(e.target.closest('[data-pdel]')) return;
       if(el.classList.contains('filled')) return openLightbox(key,rerender);
+      if(!pick){ alert('Photo input missing — reload the app.'); return; }
       _pendingKey=key; pick.value=''; pick.click();
     });
     el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
-    el.addEventListener('dragover',e=>{ e.preventDefault(); el.classList.add('over'); });
+    el.addEventListener('dragover',e=>{ e.preventDefault(); e.stopPropagation(); el.classList.add('over'); });
+    el.addEventListener('dragenter',e=>{ e.preventDefault(); e.stopPropagation(); });
     el.addEventListener('dragleave',()=>el.classList.remove('over'));
     el.addEventListener('drop',e=>{
-      e.preventDefault(); el.classList.remove('over');
-      const f=e.dataTransfer?.files?.[0]; if(f) take(key,f);
+      e.preventDefault(); e.stopPropagation(); el.classList.remove('over');
+      const f=e.dataTransfer?.files?.[0];
+      if(f) take(key,f); else alert('No image found in that drop.');
     });
   });
-  root.querySelectorAll('[data-pdel]').forEach(b=>{
-    b.onclick=async e=>{ e.stopPropagation();
-      if(confirm('Remove this photo?')){ await PHOTO.del(b.dataset.pdel); rerender(); } };
-  });
+  paintPhotos(root,rerender).catch(()=>{});
 }
+/* The page itself must not hijack a dropped file and navigate to it. */
+['dragover','drop'].forEach(t=>window.addEventListener(t,e=>e.preventDefault()));
 
 function openLightbox(key,rerender){
   PHOTO.get(key).then(blob=>{
@@ -672,7 +687,7 @@ function dayDetail(i){
   $('#v-days').innerHTML=h;
   $('#bk').onclick=renderDays;
   const root=$('#v-days');
-  paintPhotos(root).then(()=>wirePhotos(root,()=>dayDetail(i)));
+  initPhotos(root,()=>dayDetail(i));
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -719,7 +734,7 @@ function renderVault(){
   h+=`</div><div class="pmeta" id="pUse"></div>`;
 
   $('#v-vault').innerHTML=h;
-  paintPhotos($('#v-vault')).then(()=>wirePhotos($('#v-vault'),renderVault));
+  initPhotos($('#v-vault'),renderVault);
   PHOTO.usage().then(u=>{ const el=$('#pUse');
     if(el&&u) el.textContent=`Photos stored on this device · ${u.mb} MB used of ~${u.quotaMb} MB available`; });
   const save=$('#save');
@@ -761,7 +776,7 @@ function renderRef(){
 
   $('#v-ref').innerHTML=h;
   wireChk($('#v-ref'));
-  paintPhotos($('#v-ref')).then(()=>wirePhotos($('#v-ref'),renderRef));
+  initPhotos($('#v-ref'),renderRef);
 }
 
 /* ============================================================ SHELL */
