@@ -63,7 +63,7 @@ const TRIP = {
     { date:"2026-08-10", stayId:"stay-shiodome", title:"Arrive Tokyo", status:"locked",
       anchors:[
         { time:"17:30", title:"Land Haneda", hard:true, note:"Activate the eSIM before leaving the gate area. Suica is already loaded — just tap." },
-        { time:"18:15", title:"Keikyu Airport Line → SHIMBASHI. No transfer.", hard:false, note:"THE ROUTE: follow signs for Keikyu (not the Monorail). Board any Keikyu train toward Shinagawa/Asakusa — it runs THROUGH onto the Toei Asakusa Line without changing trains. Stay on it. ~30 min, ~¥500, tap in and out with Suica. GET OFF AT SHIMBASHI." },
+        { time:"18:15", title:"Keikyu Airport Line → SHIMBASHI. No transfer.", hard:false, note:"Signs say 京急線 / Keikyu, BLUE-AND-WHITE, on B1F. NOT the Monorail. ⚠ CHECK THE DESTINATION BEFORE BOARDING — trains to ASAKUSA / OSHIAGE / NARITA / KEISEI all pass Shimbashi ✅. A train to SHINAGAWA terminates there ⚠ — just wait for the next one, they run every few minutes. ~30 min, ~¥500. TAP SUICA IN *AND* OUT." },
         { time:"19:00", title:"Walk to Park Hotel Tokyo", hard:false, note:"~7 min from Shimbashi Station. Shiodome Media Tower — the hotel is on floors 25–34, reception is 25F." },
       ],
       candidates:[
@@ -388,6 +388,7 @@ const TRIP = {
     { id:"irr-fwd1",      due:"2026-08-16T18:00", title:"Forward suitcase → Yamato Onomichi Shotengai", detail:"From the Hommachi front desk, HOLD FOR PICKUP. The Onomichi hotel cannot receive a Yamato delivery. Fits the Aug 16 afternoon block." },
     { id:"irr-teamlab",   due:"2026-08-15T20:30", title:"teamLab — LAST ENTRY 20:30", detail:"Doors 19:30–21:30. Nagai Park, Midōsuji direct from Hommachi. Dinner must be early and light." },
     { id:"irr-fwd2",      due:"2026-08-18T17:00", title:"Forward suitcase → NOHGA Ueno", detail:"Drop at Yamato Shotengai or any konbini. NOHGA holds parcels sent ahead of check-in." },
+    { id:"irr-vjw",       due:"2026-08-10T11:30", title:"⚑ Visit Japan Web — register BEFORE you fly", detail:"vjw.digital.go.jp — free, official. One QR clears immigration AND customs at Haneda's Joint Kiosk. Saves 20–30 min. MUST be done at least 6 HOURS BEFORE LANDING or the QR may not generate. Both of you separately. SCREENSHOT both QR codes — do not rely on having signal in the arrivals hall." },
     { id:"irr-nikko",     due:"2026-08-12T17:44", title:"LAST Nikko express — 17:44", detail:"Target the 17:22 (→Asakusa 19:29); 17:44 (→19:49) is the real wall. Past that it's 3h+ with transfers. Corrected Aug 8 — the old 15:26 figure came from a Saturday timetable and was wrong." },
     { id:"irr-nozomi",    due:"2026-08-13T12:18", title:"Nozomi 389 → Shin-Osaka", detail:"Car 2, seats 9-D / 9-E. Checkout is 11:00, Tokyo Station needs 15–20 min inside it." },
     { id:"irr-himeji",    due:"2026-08-17T14:19", title:"Himeji → Shin-Onomichi", detail:"NOZOMI153 → KODAMA953. Castle visit has to end in time." },
@@ -423,6 +424,10 @@ const TRIP = {
       { jp:"六 七 八 九 十", romaji:"roku shichi hachi kyuu juu", en:"6 7 8 9 10" },
     ],
     cards: [
+      { title:"⚑ ARRIVAL — Haneda to the hotel, step by step",
+        body:"1) Follow Arrival / 到着. Have the Visit Japan Web QR ready — Joint Kiosk does immigration + customs in one scan. 2) Bags, then green channel. 3) Arrivals hall: find 京急線 / KEIKYU, blue-and-white, B1F. IGNORE the Monorail signs. 4) Tap Suica at the gate. 5) ⚠ CHECK DESTINATION: Asakusa / Oshiage / Narita / Keisei = BOARD. Shinagawa = wait for the next. 6) ~30 min, ~10 stops. Door display shows stops in English. Watch for 新橋 SHIMBASHI. At Sengakuji it becomes the Toei Asakusa Line — same train, stay on. 7) Off at Shimbashi, TAP OUT. 8) Shiodome / 汐留 exit, ~7 min walk to Shiodome Media Tower. Too tired? Taxi rank outside, ¥700–1,000, 5 min — take it. 9) RECEPTION IS 25F, not the ground floor. WRONG TRAIN? Get off at Shinagawa, JR Yamanote 2 stops to Shimbashi. Nothing tonight is irreversible." },
+      { title:"⚑ Show-the-screen Japanese for arrival night",
+        body:"Where is the Keikyu line? — 京急線はどこですか？ · I want to go to Shimbashi — 新橋駅に行きたいです · Does this train go to Shimbashi? — この電車は新橋に行きますか？ · To Park Hotel Tokyo please (taxi) — パークホテル東京までお願いします · Excuse me — すみません" },
       { title:"Heat — the defining constraint",
         body:"30–35°C at 70%+ humidity; a 32°C day feels like 38°C. Outdoors BEFORE 10:00 or AFTER 16:00; indoors midday. Carry water constantly — heatstroke here is a real risk, not a caution. This is exactly why Aug 19's bike ride starts at 08:00 and Nara leaves at 07:00." },
       { title:"Subway — you've never ridden one",
