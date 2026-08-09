@@ -801,17 +801,30 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>setView(b.dataset.v))
 
   const where = idx>=0 ? `Day ${idx+1} of ${TRIP.days.length}`
     : (t<TRIP.days[0].date ? 'Not started' : 'Complete');
-  const s=TRIP.meta.synced;
-  if(s){
-    const [dpart,tpart='']=s.trim().split(/\s+/);
-    const sd=parseD(dpart);
-    const age=Math.floor((parseD(t)-sd)/864e5);
-    const hhmm=tpart?` ${tpart}`:'';
-    const label=`synced ${sd.getMonth()+1}/${sd.getDate()}${hhmm}`;
+  /* Freshness comes from data.js's real Last-Modified header, not a
+     hand-typed field — a manual stamp is wrong the moment anyone
+     forgets it. Falls back to meta.synced only when offline. */
+  const paintSync=d=>{
+    if(!d){ $('#hSub').textContent=where; return; }
+    const age=Math.floor((new Date(t+'T00:00:00')-new Date(d.getFullYear(),d.getMonth(),d.getDate()))/864e5);
+    const hh=String(d.getHours()).padStart(2,'0'), mm=String(d.getMinutes()).padStart(2,'0');
+    const label=`updated ${d.getMonth()+1}/${d.getDate()} ${hh}:${mm}`;
     $('#hSub').innerHTML = age>3
       ? `${where} · <span class="stale">${label} · ${age}d old</span>`
       : `${where} · ${label}`;
-  } else $('#hSub').textContent=where;
+  };
+  const fallback=()=>{
+    const s=TRIP.meta.synced;
+    if(!s) return paintSync(null);
+    const [dp,tp='00:00']=s.trim().split(/\s+/);
+    const [y,mo,da]=dp.split('-').map(Number), [h,mi]=tp.split(':').map(Number);
+    paintSync(new Date(y,mo-1,da,h||0,mi||0));
+  };
+  fetch('data.js',{method:'HEAD',cache:'no-store'})
+    .then(r=>{ const lm=r.headers.get('Last-Modified');
+               lm ? paintSync(new Date(lm)) : fallback(); })
+    .catch(fallback);
+  $('#hSub').textContent=where;
   setView('now');
 
   /* One input serves every photo slot in the app. */

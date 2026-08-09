@@ -24,9 +24,11 @@ const TRIP = {
   meta: {
     title: "Japan 2026",
 
-    /* ⚠ BUMP THIS EVERY TIME YOU EDIT THIS FILE. "YYYY-MM-DD HH:MM", 24h.
-       Shown in the header, turns red after 3 days. */
-    synced: "2026-08-08 23:30",
+    /* OFFLINE FALLBACK ONLY — you do not need to maintain this.
+       The header reads this file's real Last-Modified header from the
+       server, so freshness is automatic and can't be wrong. This value
+       is only used when there's no connection at all. */
+    synced: "2026-08-08 20:49",
   },
 
   /* ---------- STAYS ---------- */
