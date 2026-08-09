@@ -14,7 +14,7 @@
 
    So: you only need to bump VERSION when you edit index.html or sw.js. */
 
-const VERSION     = 'jp26-v6';
+const VERSION     = 'jp26-v7';
 const NET_TIMEOUT = 3000;
 const FRESH       = ['data.js'];
 
