@@ -12,6 +12,8 @@
                   hard:true means missing it costs real money/time.
    candidates[] = flexible. The menu for that day's open hours.
    bench[]      = ranked substitutes. { replaces, alt, why }
+                  Written to be decided FROM, offline, with no
+                  lookup — name, rating, price, walk time inline.
    Anything rateable needs a unique `id` — that's what ratings
    attach to. Never reuse an id.
 
@@ -19,317 +21,427 @@
    ============================================================ */
 
 const TRIP = {
-  /* Dates come from days[] — the app reads the phone's clock, so it
-     rolls over to JST automatically the moment you land. */
   meta: {
     title: "Japan 2026",
 
     /* ⚠ BUMP THIS EVERY TIME YOU EDIT THIS FILE. "YYYY-MM-DD HH:MM", 24h.
-       Shown in the header, turns red after 3 days. With planning running
-       across several chats, this is the only signal that the dashboard
-       has fallen behind the vault. */
-    synced: "2026-08-08 22:40",
+       Shown in the header, turns red after 3 days. */
+    synced: "2026-08-08 23:30",
   },
 
-  /* ---------- STAYS (rateable: bucket "stay") ---------- */
+  /* ---------- STAYS ---------- */
   stays: [
-    {
-      id: "stay-shiodome",
-      name: "Park Hotel Tokyo",
-      area: "Shiodome / Higashi-Shimbashi",
-      in: "2026-08-10", out: "2026-08-13", nights: 3,
-      checkIn: "15:00", checkOut: "11:00",
-      note: "Shiodome Media Tower. Hamarikyu, Tsukiji, Ginza all walkable.",
-      map: "https://maps.google.com/?q=Park+Hotel+Tokyo+Shiodome",
-    },
-    {
-      id: "stay-hommachi",
-      name: "Miyako City Osaka Hommachi",
-      area: "Hommachi",
-      in: "2026-08-13", out: "2026-08-17", nights: 4,
-      checkIn: "15:00", checkOut: "11:00",
-      note: "Moderate Double, breakfast included. 3 subway stops to Shin-Osaka.",
-      map: "https://maps.google.com/?q=Miyako+City+Osaka+Hommachi",
-    },
-    {
-      id: "stay-onomichi",
-      name: "Onomichi hotel Yutori",
-      area: "Onomichi (5–7 min walk from regular Onomichi Stn)",
-      in: "2026-08-17", out: "2026-08-20", nights: 3,
-      checkIn: "15:00", checkOut: "10:00",
-      note: "Self check-in. NOT walkable from Shin-Onomichi — that's 4.1km, take a taxi.",
-      map: "https://maps.google.com/?q=Onomichi+Station",
-    },
-    {
-      id: "stay-ueno",
-      name: "NOHGA Hotel Ueno",
-      area: "Ueno",
-      in: "2026-08-20", out: "2026-08-23", nights: 3,
-      checkIn: "15:00", checkOut: "11:00",
-      note: "0.2 mi from Ueno Stn — Keisei Skyliner to Narita departs here.",
-      map: "https://maps.google.com/?q=NOHGA+HOTEL+UENO+TOKYO",
-    },
+    { id:"stay-shiodome", name:"Park Hotel Tokyo", area:"Shiodome / Higashi-Shimbashi",
+      in:"2026-08-10", out:"2026-08-13", nights:3, checkIn:"15:00", checkOut:"11:00",
+      note:"Shiodome Media Tower. Hamarikyu, Tsukiji, Ginza all walkable. Breakfast: ART colours Dining, 25F, 07:00–10:30, ¥4,500/~$31pp, NOT included in the rate.",
+      map:"https://maps.google.com/?q=Park+Hotel+Tokyo+Shiodome" },
+    { id:"stay-hommachi", name:"Miyako City Osaka Hommachi", area:"Hommachi",
+      in:"2026-08-13", out:"2026-08-17", nights:4, checkIn:"15:00", checkOut:"11:00",
+      note:"Moderate Double, breakfast included. 3 subway stops to Shin-Osaka. Check-in window 15:00–midnight.",
+      map:"https://maps.google.com/?q=Miyako+City+Osaka+Hommachi" },
+    { id:"stay-onomichi", name:"Onomichi hotel Yutori", area:"Onomichi (5–7 min walk from regular Onomichi Stn)",
+      in:"2026-08-17", out:"2026-08-20", nights:3, checkIn:"15:00", checkOut:"10:00",
+      note:"Self check-in. NOT walkable from Shin-Onomichi — that's 4.1km, take a taxi.",
+      map:"https://maps.google.com/?q=Onomichi+Station" },
+    { id:"stay-ueno", name:"NOHGA Hotel Ueno", area:"Ueno",
+      in:"2026-08-20", out:"2026-08-23", nights:3, checkIn:"15:00", checkOut:"11:00",
+      note:"0.2 mi from Ueno Stn — Keisei Skyliner to Narita departs here.",
+      map:"https://maps.google.com/?q=NOHGA+HOTEL+UENO+TOKYO" },
   ],
 
-  /* ---------- DAYS ----------
-     status: "locked" | "partial" | "open"
-     Fill in `candidates` as you map the itinerary.            */
   days: [
-    {
-      date: "2026-08-09", stayId: null, title: "Fly out", status: "locked",
-      anchors: [
-        { time: "09:16", title: "Columbus → Chicago", hard: true, note: "JL7331 / AA3414. Moved EARLIER by schedule change — not 10:21." },
-        { time: "14:30", title: "Chicago → Haneda", hard: true, note: "JL 9. ~13 hours. Build window if you want it." },
+    /* ═══════════════ Aug 9 ═══════════════ */
+    { date:"2026-08-09", stayId:null, title:"Fly out", status:"locked",
+      anchors:[
+        { time:"09:16", title:"Columbus → Chicago", hard:true, note:"JL7331 / AA3414. Moved EARLIER by schedule change — not 10:21." },
+        { time:"14:30", title:"Chicago → Haneda", hard:true, note:"JL 9. ~13 hours." },
+      ], candidates:[], bench:[] },
+
+    /* ═══════════════ Aug 10 ═══════════════ */
+    { date:"2026-08-10", stayId:"stay-shiodome", title:"Arrive Tokyo", status:"locked",
+      anchors:[
+        { time:"17:30", title:"Land Haneda", hard:true, note:"Monorail or Keikyu into central Tokyo. One transfer at most, no connection pressure — the easiest first subway ride of the trip." },
+        { time:"19:00", title:"Check in — Park Hotel Tokyo", hard:false, note:"Shiodome Media Tower." },
       ],
-      candidates: [], bench: [],
-    },
-    {
-      date: "2026-08-10", stayId: "stay-shiodome", title: "Arrive Tokyo", status: "locked",
-      anchors: [
-        { time: "17:30", title: "Land Haneda", hard: true, note: "Activate Ubigi eSIM on landing." },
-        { time: "19:00", title: "Check in — Park Hotel Tokyo", hard: false, note: "Monorail or Keikyu in. Easiest first subway ride of the trip — no connection pressure." },
+      candidates:[
+        { id:"food-underpass", bucket:"food", title:"Shimbashi Underpass Alley — dinner", walk:"5 min", cost:"¥¥",
+          tags:["dinner","no-reservation"], tip:"Start at Tsukiji Kanemasa. 10 small restaurants, mix-and-match — commit to the neighbourhood, not a booking.",
+          link:"https://maps.google.com/?q=Shimbashi+Underpass+Alley" },
       ],
-      candidates: [
-        { id: "food-underpass", bucket: "food", title: "Shimbashi Underpass Alley", walk: "5 min", cost: "¥¥", tags: ["dinner","no-reservation"], tip: "Start at Tsukiji Kanemasa. Backups: Sasagin, Tachinomidokoro Heso.", link: "https://maps.google.com/?q=Shimbashi+Underpass+Alley" },
+      bench:[
+        { replaces:"food-underpass", alt:"Sasagin — same alley, 5 min", why:"First backup if Kanemasa's seating is full. No reservation." },
+        { replaces:"food-underpass", alt:"Tachinomidokoro Heso — same alley, 5 min", why:"Second backup. Standing izakaya, turnover is fast so seats open." },
+        { replaces:"food-underpass", alt:"Uokin — Shimbashi izakaya alley, 5 min", why:"If the whole Underpass Alley is packed. Standout seafood izakaya, separate strip under the train tracks." },
       ],
-      bench: [
-        { replaces: "food-underpass", alt: "Uokin (Shimbashi izakaya alley)", why: "If Kanemasa and both backups are full — standout seafood izakaya, same 5-min walk." },
+      notes:"Check-in-and-eat evening. Do not plan anything real — you land at 17:30 after 13 hours in the air." },
+
+    /* ═══════════════ Aug 11 ═══════════════ */
+    { date:"2026-08-11", stayId:"stay-shiodome", title:"Shinjuku day", status:"locked",
+      anchors:[],
+      candidates:[
+        { id:"act-tmg", bucket:"activity", title:"Tokyo Metropolitan Gov't Building — observation deck", walk:"8 min from Shinjuku Stn", cost:"Free",
+          tags:["skyview"], tip:"The trip's one skyview. Free — beats Shibuya Sky ($16–24) on price and clears the $15pp cap.",
+          link:"https://maps.google.com/?q=Tokyo+Metropolitan+Government+Building" },
+        { id:"food-tsunahachi", bucket:"food", title:"Tsunahachi Honten — tempura lunch", walk:"18 min from TMG (1.3 km)", cost:"¥¥",
+          tags:["lunch"], tip:"", link:"https://maps.google.com/?q=Tsunahachi+Honten+Shinjuku" },
+        { id:"food-omoide", bucket:"food", title:"Omoide Yokocho — DINNER", walk:"7 min from Tsunahachi (500 m)", cost:"≤$32 pp",
+          tags:["dinner","food-stalls","no-reservation"], tip:"This IS dinner, not a snack stop. Already on the route, no booking, clears budget on its own.",
+          link:"https://maps.google.com/?q=Omoide+Yokocho" },
+        { id:"act-donki", bucket:"activity", title:"Don Quijote Kabukicho", walk:"5 min from Omoide (300 m)", cost:"¥",
+          tags:["shopping"], tip:"Last stop — open late, closes the day out naturally.",
+          link:"https://maps.google.com/?q=Don+Quijote+Shinjuku+Kabukicho" },
       ],
-      notes: "Check-in-and-eat evening. Do not plan anything real.",
-    },
-    {
-      date: "2026-08-11", stayId: "stay-shiodome", title: "Shinjuku day", status: "locked",
-      anchors: [],
-      candidates: [
-        { id: "act-tmg", bucket: "activity", title: "Tokyo Metropolitan Gov't Building — observation deck", walk: "8 min from Shinjuku Stn", cost: "Free", tags: ["skyview"], tip: "The trip's one skyview. Free, beats Shibuya Sky on price.", link: "https://maps.google.com/?q=Tokyo+Metropolitan+Government+Building" },
-        { id: "food-tsunahachi", bucket: "food", title: "Tsunahachi Honten — tempura lunch", walk: "18 min from TMG", cost: "¥¥", tags: ["lunch"], tip: "", link: "https://maps.google.com/?q=Tsunahachi+Honten+Shinjuku" },
-        { id: "food-omoide", bucket: "food", title: "Omoide Yokocho — dinner", walk: "7 min", cost: "≤$32 pp", tags: ["dinner","food-stalls","no-reservation"], tip: "This IS dinner — no separate booking needed. Already on the route.", link: "https://maps.google.com/?q=Omoide+Yokocho" },
-        { id: "act-donki", bucket: "activity", title: "Don Quijote Kabukicho", walk: "5 min", cost: "¥", tags: ["shopping"], tip: "Last — open late, closes the day out naturally.", link: "https://maps.google.com/?q=Don+Quijote+Shinjuku+Kabukicho" },
+      bench:[
+        { replaces:"food-omoide", alt:"Kabuki Sushi — 5 min from Shinjuku Stn · Tabelog 3.39 (240) · Manzoku Course ¥4,500 / ~$30", why:"THE sit-down alternative if you want a table instead of stalls. Strongest under-budget sit-down found in the entire trip search. Clears the $32pp cap." },
+        { replaces:"food-omoide", alt:"Kuu Nishishinjuku — Tabelog 3.44 (559) · ¥5,000–6,600 / ~$37–46pp", why:"Best-rated find of the whole search, but courses run over budget. Advertises a '¥3,500 and up' option — you'd have to ask for it directly at the door." },
+        { replaces:"food-omoide", alt:"Kizuna Sushi Kabukicho — Tabelog 3.47 (1,068) · ¥5,000 / ~$34pp", why:"Most-reviewed restaurant found anywhere on this trip. Just over the cap — a stretch, not a clears-budget pick." },
       ],
-      bench: [],
-      notes: "~38 min total walking. Dinner budget recut to $32pp 2026-08-08 — the trip affords one splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten/Azabu are off. Omoide Yokocho covers it.",
-    },
-    {
-      date: "2026-08-12", stayId: "stay-shiodome", title: "Nikko day trip", status: "locked",
-      anchors: [
-        { time: "06:30", title: "Depart Asakusa — Tobu Limited Express", hard: false, note: "~2h. Earlier is better, the day is built backward from the return train." },
-        { time: "15:26", title: "Return express from Tobu-Nikko", hard: true, note: "TARGET, not a wall. Miss it → local train, 72 min slower (arrives 18:32 vs 17:16)." },
+      notes:"~38 min total walking across the whole route. Dinner budget was recut to $32pp on Aug 8 — the trip affords ONE splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten and Azabu are both off." },
+
+    /* ═══════════════ Aug 12 ═══════════════ */
+    { date:"2026-08-12", stayId:"stay-shiodome", title:"Nikko day trip", status:"locked",
+      anchors:[
+        { time:"06:30", title:"Depart Asakusa — Tobu Limited Express", hard:false, note:"~2h. Earlier is better; the whole day is built backward from the return train." },
+        { time:"15:26", title:"Return express from Tobu-Nikko", hard:true, note:"TARGET, not a wall. Miss it and the fallback local is 72 min slower — arrives Asakusa 18:32 instead of 17:16." },
       ],
-      candidates: [
-        { id: "act-toshogu", bucket: "activity", title: "Toshogu Shrine", walk: "town core", cost: "Incl. in pass", tags: ["temple","morning"], tip: "Go first, before the tour buses.", link: "https://maps.google.com/?q=Nikko+Toshogu" },
-        { id: "act-kegon", bucket: "activity", title: "Kegon Falls + Akechidaira Ropeway", walk: "bus to Chuzenji", cost: "Incl. in pass", tags: ["nature"], tip: "Ryuzu Falls on the way back down.", link: "https://maps.google.com/?q=Kegon+Falls" },
-        { id: "food-kanaya", bucket: "food", title: "Nikko Kanaya Hotel — LUNCH", walk: "Nikko town", cost: "¥¥", tags: ["lunch"], tip: "Lunch not dinner, to fit the return train. The '100-year curry' is real. Purin-tei's 3 Era Pudding too.", link: "https://maps.google.com/?q=Nikko+Kanaya+Hotel" },
+      candidates:[
+        { id:"act-toshogu", bucket:"activity", title:"Toshogu Shrine", walk:"Nikko town core", cost:"Incl. in pass",
+          tags:["temple","morning"], tip:"Go first, before the tour buses.", link:"https://maps.google.com/?q=Nikko+Toshogu" },
+        { id:"act-kegon", bucket:"activity", title:"Kegon Falls + Akechidaira Ropeway", walk:"bus to Chuzenji", cost:"Incl. in pass",
+          tags:["nature"], tip:"Ryuzu Falls on the way back down.", link:"https://maps.google.com/?q=Kegon+Falls" },
+        { id:"food-kanaya", bucket:"food", title:"Nikko Kanaya Hotel — LUNCH not dinner", walk:"Nikko town", cost:"¥¥",
+          tags:["lunch"], tip:"Moved to lunch specifically to fit the return train. The '100-year curry' is real, and so is Purin-tei's 3 Era Pudding.",
+          link:"https://maps.google.com/?q=Nikko+Kanaya+Hotel" },
       ],
-      bench: [],
-      notes: "All Area Pass ¥8,000/adult (NOT the ¥3,000 World Heritage pass — that one doesn't reach Chuzenji). No Fuji view here; Fuji rests on the seat-E Shinkansen legs.",
-    },
-    {
-      date: "2026-08-13", stayId: "stay-hommachi", title: "Tokyo → Osaka", status: "locked",
-      anchors: [
-        { time: "11:00", title: "Checkout — Park Hotel", hard: true, note: "" },
-        { time: "12:18", title: "Nozomi 389 → Shin-Osaka", hard: true, note: "Car 2, Seats 9-D / 9-E. 9-E is the Fuji side. Arrives 14:45." },
-        { time: "15:10", title: "Midosuji Line → Hommachi", hard: false, note: "24 min door to door incl. walk. ~¥280." },
+      bench:[
+        { replaces:"food-kanaya", alt:"Purin-tei — Nikko town · '3 Era Pudding' tasting", why:"If Kanaya's dining room is full or slow. Dessert-forward, quick, and it's the other thing you specifically remembered about Nikko." },
       ],
-      candidates: [
-        { id: "food-yamanoya", bucket: "food", title: "Yamano Ya Ichiba — dinner", walk: "199m underground from Hommachi Stn", cost: "¥3,300 / ~$23 pp", tags: ["dinner","sashimi"], tip: "Tabelog 3.43 (222 reviews). Sashimi platter + 30 kinds all-you-can-drink. Connected to the station — no weather, no walk. Date not fixed; any Osaka night.", link: "https://maps.google.com/?q=Yamano+Ya+Ichiba+Hommachi" },
+      notes:"All Area Pass ¥8,000/adult — NOT the ¥3,000 World Heritage pass, which doesn't reach Chuzenji where the falls and ropeway are. No Fuji view from Nikko (it's north, Fuji is southwest) — Fuji rests entirely on the seat-E Shinkansen legs." },
+
+    /* ═══════════════ Aug 13 ═══════════════ */
+    { date:"2026-08-13", stayId:"stay-hommachi", title:"Tokyo → Osaka", status:"locked",
+      anchors:[
+        { time:"11:00", title:"Checkout — Park Hotel", hard:true, note:"Hotel breakfast closes 10:30 (last order 10:00) — it CANNOT fill the post-checkout gap. Eat earlier or grab coffee to go." },
+        { time:"11:30", title:"Walk to Shimbashi → JR → Tokyo Station", hard:false, note:"~5 min walk + ~5 min ride + 15–20 min to reach the Shinkansen gates. Tokyo Station is big — don't cut this fine." },
+        { time:"12:05", title:"Platform buffer — buy ekiben here", hard:false, note:"The ride spans the actual lunch hour and nothing else covers it. Ekiben shops plus Character Street / Ramen Street are right in the station." },
+        { time:"12:18", title:"Nozomi 389 → Shin-Osaka", hard:true, note:"Car 2, Seats 9-D / 9-E. 9-E is the Fuji side. Arrives 14:45." },
+        { time:"15:15", title:"Check in — Miyako City Osaka Hommachi", hard:false, note:"Midōsuji Line + walk, 24 min from Shin-Osaka, live-checked. ~¥280." },
       ],
-      bench: [
-        { replaces: "food-yamanoya", alt: "GOTTO Sakaba Bingomachi (from ¥3,500 / ~$24)", why: "147 reviews, steps from Hommachi Stn. Take it if the sake-heavy sashimi format doesn't appeal." },
+      candidates:[
+        { id:"act-nakanoshima", bucket:"activity", title:"Nakanoshima — riverside park walk", walk:"short walk / 1 stop from Hommachi", cost:"Free",
+          tags:["nature","gardens","afternoon"], tip:"The lead pick for the 15:15–18:00 gap. Japanese garden, rose garden (3,700 roses), Osaka City Central Public Hall (Meiji architecture), water plaza. Nothing else on the trip is a riverside-park walk.",
+          link:"https://maps.google.com/?q=Nakanoshima+Park+Osaka" },
+        { id:"food-gotto", bucket:"food", title:"GOTTO Sakaba Bingomachi — dinner option A", walk:"3 min from Hommachi Stn", cost:"¥3,500+ / ~$24pp",
+          tags:["dinner","izakaya"], tip:"Ou and Kobe beef, Akashi Market seafood, horse sashimi. All-you-can-drink course. Open Mon–Sat 17:00–24:00 — confirmed open this Thursday. Minimal walking after a travel day.",
+          link:"https://maps.google.com/?q=GOTTO+Sakaba+Bingomachi" },
+        { id:"food-dotonbori", bucket:"food", title:"Dotonbori food-stall crawl — dinner option B", walk:"12–15 min or short taxi", cost:"¥1,500–2,500 / ~$10–17pp",
+          tags:["dinner","food-stalls","no-reservation"], tip:"Takoyaki, okonomiyaki, walk-and-graze. Kushikatsu Daruma if a semi-sit-down is wanted: ¥120–240/skewer, combo sets ¥1,400–2,200. Cheaper than GOTTO.",
+          link:"https://maps.google.com/?q=Dotonbori" },
       ],
-      notes: "First day of Obon. Suitcase should already be forwarded — daypack only.",
-    },
-    {
-      date: "2026-08-14", stayId: "stay-hommachi", title: "Nara", status: "partial",
-      anchors: [
-        { time: "07:00", title: "Leave for Nara", hard: false, note: "Not arbitrary — tour buses land by 10:00, park is full by 13:00. Early is the whole difference." },
+      bench:[
+        { replaces:"act-nakanoshima", alt:"Dobuike Street — in Hommachi itself, 0 transit", why:"Lower-effort fallback if the legs are done after the travel day. Narrow streets, vintage shops, street art. Browse-only, no purchase needed to make it worth the walk." },
+        { replaces:"act-nakanoshima", alt:"Just rest at the hotel", why:"Legitimate option — this is explicitly a mood call, and tomorrow is a 06:45 Nara start." },
+        { replaces:"food-gotto", alt:"Kuroge Wagyu Ittogai Yakiniku Mitsuru — Shinsaibashi, 2 min from Shinsaibashi Stn · Tabelog 3.33 (208) · ¥4,400 / ~$30", why:"Only worth it if the evening ends up routing through Dotonbori/Shinsaibashi anyway. Yakiniku instead of sashimi/izakaya." },
       ],
-      candidates: [
-        { id: "dt-nara", bucket: "daytrip", title: "Nara — Kintetsu Osaka-Namba → Kintetsu-Nara", walk: "35–40 min ride", cost: "¥680", tags: ["daytrip"], tip: "Kintetsu beats JR (¥840) on price, speed AND drops you closer to the sights.", link: "https://maps.google.com/?q=Kintetsu+Nara+Station" },
-        { id: "act-todaiji", bucket: "activity", title: "Tōdai-ji Daibutsuden", walk: "in Nara Park", cost: "¥800", tags: ["temple","morning"], tip: "Park grounds themselves are free.", link: "https://maps.google.com/?q=Todaiji" },
+      notes:"First day of Obon. Suitcase already forwarded — daypack only. Osaka Castle is explicitly OFF for arrival day: real landmark, wrong day. After dinner, a short Dotonbori walk either way for the canal and neon — keep it short, 06:45 start tomorrow." },
+
+    /* ═══════════════ Aug 14 ═══════════════ */
+    { date:"2026-08-14", stayId:"stay-hommachi", title:"Nara", status:"locked",
+      anchors:[
+        { time:"06:45", title:"Leave hotel — konbini breakfast on the walk", hard:false, note:"Hotel buffet is too tight against a hard 07:00 train. Grab-and-go from a konbini is the reliable call; Nara Park has nothing before 08:00 and Naramachi lunch is ~10:30." },
+        { time:"07:00", title:"Kintetsu Osaka-Namba → Kintetsu-Nara", hard:true, note:"¥680, 35–40 min. This early specifically to beat the 10:00 tour-bus wall. Kintetsu beats JR (¥840) on price, speed AND drops you closer." },
+        { time:"14:25", title:"Back in Osaka", hard:false, note:"Kintetsu back to Osaka-Namba, then Midōsuji to Hommachi." },
       ],
-      bench: [],
-      notes: "Half day — pair with an Osaka evening. Aug 14/15/16 order is swappable; Nara sits first because it's the one that punishes a late start.",
-    },
-    {
-      date: "2026-08-15", stayId: "stay-hommachi", title: "Kurashiki + Okayama", status: "partial",
-      anchors: [],
-      candidates: [
-        { id: "dt-kurashiki", bucket: "daytrip", title: "Kurashiki + Okayama", walk: "~1.5h door to door", cost: "Shinkansen + ¥330", tags: ["daytrip"], tip: "Shin-Osaka → Okayama (Sanyo Shinkansen ~45 min), then Okayama → Kurashiki (San-yo Main Line ~16 min).", link: "https://maps.google.com/?q=Kurashiki+Bikan+Historical+Quarter" },
-        { id: "act-bikan", bucket: "activity", title: "Kurashiki Bikan Historical Quarter", walk: "from Kurashiki Stn", cost: "Free to walk", tags: ["historic","canal"], tip: "Preserved Edo canal town. Clearest low-crowd read of anywhere checked on this trip.", link: "https://maps.google.com/?q=Kurashiki+Bikan+Historical+Quarter" },
-        { id: "act-okayama-castle", bucket: "activity", title: "Okayama Castle", walk: "16 min by train from Kurashiki", cost: "¥", tags: ["castle"], tip: "\"Crow Castle\" — black exterior. Pairs same-day with Kurashiki.", link: "https://maps.google.com/?q=Okayama+Castle" },
+      candidates:[
+        { id:"dt-nara", bucket:"daytrip", title:"Nara — the whole day", walk:"station sits at the park edge", cost:"¥680 rail",
+          tags:["daytrip"], tip:"07:45–09:00 park + deer. 09:00–09:45 Tōdai-ji. 09:45–10:30 Kasuga Taisha. 10:30–13:00 Naramachi + lunch.",
+          link:"https://maps.google.com/?q=Kintetsu+Nara+Station" },
+        { id:"act-deer", bucket:"activity", title:"Nara Park + deer feeding", walk:"at the station", cost:"¥200 crackers",
+          tags:["nature","morning"], tip:"~1,200 deer. Shika senbei crackers ¥200. Best light and lowest crowds this early — this is why the 07:00 train matters.",
+          link:"https://maps.google.com/?q=Nara+Park" },
+        { id:"act-todaiji", bucket:"activity", title:"Tōdai-ji Daibutsuden", walk:"in Nara Park", cost:"¥800",
+          tags:["temple","morning"], tip:"The Great Buddha. Park grounds themselves are free. Covers the 'temple' non-negotiable.",
+          link:"https://maps.google.com/?q=Todaiji" },
+        { id:"act-kasuga", bucket:"activity", title:"Kasuga Taisha", walk:"from Tōdai-ji", cost:"Free to walk",
+          tags:["temple","nature"], tip:"Forest path lined with stone and bronze lanterns.",
+          link:"https://maps.google.com/?q=Kasuga+Taisha" },
+        { id:"act-naramachi", bucket:"activity", title:"Naramachi — old merchant district", walk:"from Kasuga", cost:"Free",
+          tags:["historic","lunch"], tip:"Machiya townhouses, small shops and cafés. LUNCH HAPPENS HERE — nothing needs a reservation, pick on the day.",
+          link:"https://maps.google.com/?q=Naramachi" },
       ],
-      bench: [],
-      notes: "Replaced Kyoto 2026-07-26 — same heat (~32°C) without Kyoto's bowl-trap, and none of the Obon crowd.",
-    },
-    {
-      date: "2026-08-16", stayId: "stay-hommachi", title: "Asuka", status: "partial",
-      anchors: [],
-      candidates: [
-        { id: "dt-asuka", bucket: "daytrip", title: "Asuka Village", walk: "Kintetsu Yoshino line", cost: "¥", tags: ["daytrip","nature"], tip: "Japan's proto-capital. Burial mounds, 1,400-year-old stone structures, terraced rice fields. Near-zero tourists.", link: "https://maps.google.com/?q=Asuka+Station+Nara" },
-        { id: "act-asuka-bikes", bucket: "activity", title: "Rental bikes at Asuka Station", walk: "at the station", cost: "¥", tags: ["cycling","nature"], tip: "Flat quiet roads, no booking needed. This is how you see Asuka.", link: "https://maps.google.com/?q=Asuka+Station+bicycle+rental" },
+      bench:[
+        { replaces:"dt-nara", alt:"Evening dinner: GOTTO Sakaba or Dotonbori — whichever wasn't used Aug 13", why:"Same flexible pair as last night. Take the one you skipped, for variety." },
+        { replaces:"act-naramachi", alt:"Udon-making class — IRICOSKY · 90 min · ¥6,820/group · bookable same-day up to 2h ahead", why:"If Nara ran lighter than expected, this fits the 15:00–18:00 recovery gap. Part of the flexible Osaka bench." },
       ],
-      bench: [
-        { replaces: "dt-asuka", alt: "Minoh Falls — half-day (Hankyu from Umeda ~30 min, then paved 45-min walk each way)", why: "If a lighter day is wanted. Monkeys, shrines, waterfall — and the standing fallback for the trip's thin 'hike' category." },
+      notes:"Tiring day — 06:45 start, ~7hrs on the ground in Nara heat. The 15:00–18:00 block back in Osaka defaults to REST, more so than Aug 13's did." },
+
+    /* ═══════════════ Aug 15 ═══════════════ */
+    { date:"2026-08-15", stayId:"stay-hommachi", title:"Kurashiki + Okayama · teamLab", status:"partial",
+      anchors:[
+        { time:"07:15", title:"Leave — konbini breakfast again", hard:false, note:"Same tension as yesterday. Quick and reliable beats a tight buffet visit." },
+        { time:"08:00", title:"Sanyo Shinkansen, Shin-Osaka → Okayama", hard:false, note:"~45 min." },
+        { time:"17:30", title:"EARLY light dinner — must be quick", hard:true, note:"Not the leisurely GOTTO/Dotonbori pair. teamLab entry is hard at 19:30 and this is just fuel. Spot still unpicked — grab something fast near Hommachi or on the Nagai line." },
+        { time:"19:30", title:"teamLab Botanical Garden — LOCKED", hard:true, note:"Night-only. LAST ENTRY 20:30. Nagai Park, Midōsuji Line direct from Hommachi (no transfer), ~10 min walk from Nagai Station." },
       ],
-      notes: "Good half-day. Covers the 'nature' non-negotiable.",
-    },
-    {
-      date: "2026-08-17", stayId: "stay-onomichi", title: "Osaka → Himeji → Onomichi", status: "locked",
-      anchors: [
-        { time: "11:00", title: "Checkout — Hommachi", hard: true, note: "" },
-        { time: "12:00", title: "Himeji Castle", hard: false, note: "Hommachi→Himeji 1h26 by JR rapid, ¥1,650. Not Shinkansen." },
-        { time: "14:19", title: "Himeji → Shin-Onomichi", hard: true, note: "NOZOMI153 → Okayama → KODAMA953. Arrives 15:23." },
-        { time: "15:35", title: "Taxi → hotel", hard: false, note: "~10 min, ¥1,500–2,000. Shin-Onomichi is NOT walkable to the hotel." },
+      candidates:[
+        { id:"dt-kurashiki", bucket:"daytrip", title:"Kurashiki + Okayama", walk:"~1.5h each way", cost:"Shinkansen + ¥330",
+          tags:["daytrip"], tip:"Shin-Osaka → Okayama (~45 min), then Okayama → Kurashiki (San-yo Main Line, ~16 min, ¥330). Explicitly under-touristed — strongest no-crowds pick of the three day trips.",
+          link:"https://maps.google.com/?q=Kurashiki+Bikan+Historical+Quarter" },
+        { id:"act-okayama-castle", bucket:"activity", title:"Okayama Castle", walk:"08:45–10:00", cost:"¥",
+          tags:["castle","morning"], tip:"'Crow Castle' — black exterior.", link:"https://maps.google.com/?q=Okayama+Castle" },
+        { id:"act-bikan", bucket:"activity", title:"Kurashiki Bikan Historical Quarter", walk:"10:20–13:00", cost:"Free to walk",
+          tags:["historic","canal","lunch"], tip:"Preserved Edo canal town, art museums. LUNCH HAPPENS HERE — canal-side cafés, nothing needs booking.",
+          link:"https://maps.google.com/?q=Kurashiki+Bikan+Historical+Quarter" },
+        { id:"act-teamlab", bucket:"activity", title:"teamLab Botanical Garden", walk:"Nagai Park", cost:"¥¥",
+          tags:["evening","art","locked"], tip:"19:30–21:30, last entry 20:30. Digital art through a living botanical garden after dark.",
+          link:"https://maps.google.com/?q=teamLab+Botanical+Garden+Osaka+Nagai" },
       ],
-      candidates: [], bench: [],
-      notes: "Daypack-only move day — suitcase forwarded ahead to the Yamato Shotengai branch for pickup.",
-    },
-    {
-      date: "2026-08-18", stayId: "stay-onomichi", title: "Onomichi — Senkoji", status: "partial",
-      anchors: [],
-      candidates: [
-        { id: "act-senkoji", bucket: "activity", title: "Senkoji — ropeway up, walk down", walk: "from town", cost: "¥", tags: ["temple","views"], tip: "Ropeway is only 3–4 min; the walk DOWN through Cat Street is the actual experience.", link: "https://maps.google.com/?q=Senkoji+Temple+Onomichi" },
-        { id: "food-onomichi-ramen", bucket: "food", title: "Onomichi ramen", walk: "in town", cost: "~¥600", tags: ["lunch","local"], tip: "The local specialty — clear shoyu, chicken fat, pork back fat. Specific shop still unpicked.", link: "https://maps.google.com/?q=Onomichi+ramen" },
-        { id: "act-hondori", bucket: "activity", title: "Hondori shopping street", walk: "from JR Onomichi Stn", cost: "Free", tags: ["shopping"], tip: "~1.2km, ~210 shops, several 100+ years old. Retro, not high-end.", link: "https://maps.google.com/?q=Onomichi+Hondori+Shopping+Street" },
-        { id: "food-tamaganzo", bucket: "food", title: "Tamaganzo — dinner", walk: "5 min from Onomichi Stn, no stairs", cost: "¥3,800 / ~$26", tags: ["dinner","ocean-view"], tip: "Tabelog 3.33 (94 reviews). \"Food only\" course. Date not fixed — either Onomichi night.", link: "https://maps.google.com/?q=Tamaganzo+Onomichi" },
+      bench:[
+        { replaces:"act-okayama-castle", alt:"Korakuen Garden — immediately next to Okayama Castle · +45–60 min", why:"One of Japan's 'three great gardens' and ZERO extra transit. Worth it if the morning has slack. Pure add-on, not a swap." },
+        { replaces:"dt-kurashiki", alt:"Super Nintendo World (USJ) half-day — IF it's worth trading Kurashiki for", why:"The live contingency. Kurashiki is the one day trip nobody specifically asked for, so it's the one to give up. If this happens, teamLab moves to Aug 14 evening." },
       ],
-      bench: [
-        { replaces: "food-tamaganzo", alt: "The RESTAURANT at ONOMICHI U2 (à la carte only)", why: "Rated higher (3.41/163) and ocean-adjacent, but its set courses run ¥6,600 — only à la carte lands under budget." },
+      notes:"⚠ CONTINGENT DAY. If Nintendo World trades against Kurashiki, this whole day rebuilds and teamLab moves to Aug 14. The 14:30–17:30 block back in Osaka is recovery — the udon class could fit if it starts by 15:30–16:00, but Object Osaka does NOT fit tonight (wrong direction from the Hommachi→Nagai route)." },
+
+    /* ═══════════════ Aug 16 ═══════════════ */
+    { date:"2026-08-16", stayId:"stay-hommachi", title:"Minoh Falls + Katsuoji", status:"locked",
+      anchors:[
+        { time:"08:00", title:"Leave Hommachi — Midōsuji to Umeda", hard:false, note:"Then transfer to the Hankyu Takarazuka Line for Minoo Station. Runs as a loop, no backtracking." },
+        { time:"11:15", title:"Taxi, Minoo → Katsuoji", hard:false, note:"~¥3,600, 15 min. No practical alternative — the bus is infrequent." },
+        { time:"13:20", title:"Taxi/bus → Senri-Chūō, then Midōsuji direct home", hard:false, note:"Direct back to Hommachi, no transfer. This is why the loop routing was chosen." },
+        { time:"18:00", title:"Dinner — Yamano Ya Ichiba", hard:false, note:"Last night in Osaka. Connected to Hommachi Station by a 199m underground passage — no weather, no walk." },
       ],
-      notes: "Drop the suitcase at Yamato Shotengai or a konbini today, addressed to NOHGA Ueno.",
-    },
-    {
-      date: "2026-08-19", stayId: "stay-onomichi", title: "Onomichi — open", status: "partial",
-      anchors: [],
-      candidates: [
-        { id: "act-shimanami", bucket: "activity", title: "Shimanami Kaido — half-day ride", walk: "rentals at the trailhead", cost: "¥¥", tags: ["hike","cycling","nature"], tip: "The trip's only cycling day, and it starts literally in Onomichi.", link: "https://maps.google.com/?q=Shimanami+Kaido+Onomichi" },
-        { id: "act-literature", bucket: "activity", title: "Path of Literature", walk: "from Senkoji", cost: "Free", tags: ["walk"], tip: "Free add-on off the Senkoji visit.", link: "https://maps.google.com/?q=Path+of+Literature+Onomichi" },
+      candidates:[
+        { id:"act-minoh", bucket:"activity", title:"Minoh Falls", walk:"~45 min paved path each way", cost:"Free",
+          tags:["hike","nature","waterfall"], tip:"09:00–11:00. Monkeys, shrines, the bridge. This is the trip's answer to the 'hike' non-negotiable — the category the trip was thinnest on.",
+          link:"https://maps.google.com/?q=Minoh+Falls" },
+        { id:"act-katsuoji", bucket:"activity", title:"Katsuoji Temple", walk:"15 min taxi from Minoo", cost:"¥",
+          tags:["temple","gardens"], tip:"11:30–13:00. The 'Daruma temple' — 1,300 years old, thousands of daruma dolls tucked everywhere. Seasonal gardens.",
+          link:"https://maps.google.com/?q=Katsuoji+Temple" },
+        { id:"food-yamanoya", bucket:"food", title:"Yamano Ya Ichiba — dinner", walk:"199m underground from Hommachi Stn", cost:"¥3,300 / ~$23pp",
+          tags:["dinner","sashimi"], tip:"Tabelog 3.43 (222). Sashimi platter + 30 kinds all-you-can-drink. Online instant reservation. The Osaka send-off.",
+          link:"https://maps.google.com/?q=Yamano+Ya+Ichiba+Hommachi" },
       ],
-      bench: [],
-    },
-    {
-      date: "2026-08-20", stayId: "stay-ueno", title: "Onomichi → Tokyo", status: "locked",
-      anchors: [
-        { time: "10:00", title: "Checkout", hard: true, note: "" },
-        { time: "11:30", title: "Taxi → Shin-Onomichi", hard: true, note: "~10 min. Leave buffer — this is the one transfer with no slack behind it." },
-        { time: "12:21", title: "Shin-Onomichi → Tokyo", hard: true, note: "KODAMA948 → Okayama → NOZOMI24. Arrives Tokyo 16:15." },
+      bench:[
+        { replaces:"food-yamanoya", alt:"GOTTO Sakaba Bingomachi — 3 min from Hommachi Stn · Tabelog rated · from ¥3,500 / ~$24", why:"Fallback if Yamano Ya's sake-heavy sashimi format doesn't appeal, or if it's full. Both clear budget easily." },
+        { replaces:"act-katsuoji", alt:"Object Osaka — custom-patch shop, Nishishinsaibashi · 5–10 min detour", why:"Flexible Osaka bench item. Only fits if the evening routes through Dotonbori/Shinsaibashi instead of staying near Hommachi." },
       ],
-      candidates: [], bench: [],
-    },
-    {
-      date: "2026-08-21", stayId: "stay-ueno", title: "Ueno — museum, Ameyoko, Motoyama", status: "locked",
-      anchors: [
-        { time: "19:00", title: "Yakiniku Motoyama Honten — THE splurge dinner", hard: true, note: "Locked 2026-08-08. Tabelog 3.40 / 378 reviews, A5 wagyu. Nagomi course ¥7,788 (~$52pp), 19 dishes, 2hr all-you-can-drink. 1–2 min from Okachimachi Stn. Booked via Tabelog — pay online." },
+      notes:"Swapped in for Asuka on Aug 8 — both of these were asked for by name; Asuka was picked by process of elimination. The 14:00–18:00 block is where the Takkyubin suitcase-forward errand goes (front desk → Yamato Onomichi Shotengai) — a quick stop, rest of the block is genuinely free." },
+
+    /* ═══════════════ Aug 17 ═══════════════ */
+    { date:"2026-08-17", stayId:"stay-onomichi", title:"Osaka → Himeji → Onomichi", status:"locked",
+      anchors:[
+        { time:"11:00", title:"Checkout — Hommachi", hard:true, note:"" },
+        { time:"12:00", title:"Himeji Castle", hard:false, note:"Hommachi→Himeji 1h26 by JR rapid, ¥1,650. NOT Shinkansen. Budget 1.5–3h at the castle depending on crowds." },
+        { time:"14:19", title:"Himeji → Shin-Onomichi", hard:true, note:"NOZOMI153 → Okayama → KODAMA953. Arrives 15:23." },
+        { time:"15:35", title:"Taxi → hotel", hard:false, note:"~10 min, ¥1,500–2,000. Shin-Onomichi is 4.1km from the hotel — NOT walkable, and it's a different station from regular Onomichi." },
       ],
-      candidates: [
-        { id: "act-tnm", bucket: "activity", title: "Tokyo National Museum", walk: "Ueno Park", cost: "¥", tags: ["museum","indoor"], tip: "Morning. The trip's one indoor/art experience. Deserves 2–3h if actually toured.", link: "https://maps.google.com/?q=Tokyo+National+Museum" },
-        { id: "act-ameyoko", bucket: "activity", title: "Ameyoko", walk: "7–8 min from the park", cost: "¥", tags: ["shopping","food-stalls"], tip: "Afternoon. 400+ stores, menchi katsu and sweets — covers lunch too.", link: "https://maps.google.com/?q=Ameyoko" },
+      candidates:[
+        { id:"act-himeji", bucket:"activity", title:"Himeji Castle", walk:"from Himeji Stn", cost:"¥1,650 rail",
+          tags:["castle","historic"], tip:"Japan's finest surviving castle. Folded into the move day rather than costing a separate day-trip slot.",
+          link:"https://maps.google.com/?q=Himeji+Castle" },
+        { id:"food-komedoko", bucket:"food", title:"Komedoko Shokudo — dinner option A", walk:"3 min from Onomichi Stn", cost:"¥4,000–5,000",
+          tags:["dinner","ocean-view"], tip:"Tabelog 3.29 (75). Ocean view. Sister restaurant to Tamaganzo.",
+          link:"https://maps.google.com/?q=Komedoko+Shokudo+Onomichi" },
       ],
-      bench: [],
-      notes: "The one genuinely free day — and it's now full. The Motoyama booking was being completed via Tabelog; worth confirming it went through.",
-    },
-    {
-      date: "2026-08-22", stayId: "stay-ueno", title: "Last full day", status: "partial",
-      anchors: [],
-      candidates: [
-        { id: "food-pontahonke", bucket: "food", title: "Pontahonke — tonkatsu", walk: "Ueno", cost: "¥¥", tags: ["lunch","local"], tip: "Said to be among Ueno's best three.", link: "https://maps.google.com/?q=Pontahonke+Ueno" },
-        { id: "food-torikei", bucket: "food", title: "Torikei Ueno Hiro Koji — yakitori", walk: "Ueno", cost: "¥¥", tags: ["lunch","local"], tip: "Top-100 ranked six years running.", link: "https://maps.google.com/?q=Torikei+Ueno" },
-        { id: "food-taimeiken", bucket: "food", title: "Yoshokuya Sandaime Taimeiken — omurice", walk: "inside Ueno Stn", cost: "¥", tags: ["lunch"], tip: "Inside the station — the zero-effort option on a pack day.", link: "https://maps.google.com/?q=Taimeiken+Ueno+Station" },
+      bench:[
+        { replaces:"food-komedoko", alt:"Yamatoyu — 15 min from Onomichi Stn, likely closer to the hotel · Tabelog 3.33 (104) · ¥3,000–3,999", why:"Genuine toss-up, not a downgrade — a converted 100-year-old bathhouse, now a xiaolongbao izakaya. Same neighbourhood as the Yamato Shotengai luggage pickup. Pick on the day by energy and mood." },
       ],
-      bench: [
-        { replaces: "food-pontahonke", alt: "Niku no Ohyama (butcher-run fried food) · Hachinoki (all-you-can-eat meat)", why: "Both cheap, both local. Two more from the same shortlist if the first three are shut or queued." },
+      notes:"Daypack-only move day — the suitcase was forwarded ahead to Yamato Onomichi Shotengai for hold-for-pickup. Collect it in person; the hotel can't receive a Yamato delivery." },
+
+    /* ═══════════════ Aug 18 ═══════════════ */
+    { date:"2026-08-18", stayId:"stay-onomichi", title:"Onomichi — Senkoji", status:"locked",
+      anchors:[
+        { time:"09:30", title:"Walk to the Senkoji ropeway base", hard:false, note:"No early-start pressure this leg — Onomichi's whole appeal is that it's under-touristed. Relaxed breakfast is fine." },
+        { time:"09:45", title:"Ropeway up", hard:false, note:"¥500 one-way / ¥700 round trip, 3–4 min. Buy ONE WAY — the walk down is the point." },
+        { time:"17:00", title:"Dinner — Onomichi WHARF", hard:true, note:"Fixed to tonight by a real constraint: WHARF is CLOSED WEDNESDAYS and Aug 19 is a Wednesday. Showing up tomorrow expecting it open would be a real miss." },
       ],
-      notes: "Pack day, but the gap night is already booked at the same hotel — no luggage scramble. Last real souvenir window. Narita is early tomorrow.",
-    },
-    {
-      date: "2026-08-23", stayId: null, title: "Fly home", status: "locked",
-      anchors: [
-        { time: "07:00", title: "Ueno → Narita", hard: true, note: "Keisei Skyliner, ~41 min, ~¥3,000. Leaves from Ueno Stn, 0.2 mi from the hotel." },
-        { time: "09:45", title: "JL 56 Narita → Chicago", hard: true, note: "NARITA, not Haneda. Different airport from arrival." },
+      candidates:[
+        { id:"act-senkoji", bucket:"activity", title:"Senkoji Temple — ropeway up, walk down", walk:"09:50–11:30", cost:"¥500 one-way",
+          tags:["temple","views"], tip:"Est. 806 AD. Ride up, walk down through Cat Street (Neko no Hosomichi) — stone steps, small cafés, the Manekineko Museum (1,500+ cat figurines). ~2–2.5h total. Onomichi's one must-do.",
+          link:"https://maps.google.com/?q=Senkoji+Temple+Onomichi" },
+        { id:"food-onomichi-ramen", bucket:"food", title:"Onomichi ramen — lunch", walk:"near the station or arcade", cost:"~¥600",
+          tags:["lunch","local"], tip:"The local specialty: clear shoyu broth, chicken fat, pork back fat. Specific shop deliberately unpicked — low stakes, look on the day.",
+          link:"https://maps.google.com/?q=Onomichi+ramen" },
+        { id:"food-wharf", bucket:"food", title:"Onomichi WHARF — dinner", walk:"1–2 min from Onomichi Stn", cost:"¥4,400 / ~$30",
+          tags:["dinner","waterfront"], tip:"Tabelog 3.37 (131) — edges Tamaganzo on both rating and sample size, and it's closer to the station. Standard Plan clears budget.",
+          link:"https://maps.google.com/?q=Onomichi+WHARF" },
       ],
-      candidates: [], bench: [],
-    },
+      bench:[
+        { replaces:"act-senkoji", alt:"AFTERNOON (13:00–17:00) — Path of Literature · free, from Senkoji Park down toward town", why:"Boulder-quote trail on the SAME hillside as the morning. Zero cost, natural extension if the legs have anything left. (Was mis-filed under Aug 19 — it's nowhere near the bike route.)" },
+        { replaces:"act-senkoji", alt:"AFTERNOON — Onomichi U2 · converted 1942 harborside warehouse", why:"Design-forward cycling-hub complex: bakery, boutique, Giant bike shop, Yard Cafe with a cycle-thru espresso window. Deliberately a different register from the morning's temple walk. Browsing and coffee is cheap — only its restaurant was ruled out on price." },
+        { replaces:"act-senkoji", alt:"AFTERNOON — Onomichi Motion Picture Museum", why:"Film props and a screening room. Onomichi was the location for nine Nobuhiko Obayashi films. Jodo-ji and Tenneiji's pagoda — the postcard shots — are on the same Cat Street descent, so it layers meaning onto a walk you're already doing." },
+        { replaces:"act-senkoji", alt:"AFTERNOON — just rest", why:"The plain default. Reasonable given tomorrow is a bike ride in August heat." },
+      ],
+      notes:"Deliberately NOT a dedicated Hondori arcade block or the 25-temple Temple Trail. Shinjuku and Yanaka Ginza already cover arcades twice; the Temple Trail would be a 4th temple after Toshogu/Senkoji/Tōdai-ji. Both fine as pass-throughs, not planned blocks." },
+
+    /* ═══════════════ Aug 19 ═══════════════ */
+    { date:"2026-08-19", stayId:"stay-onomichi", title:"Shimanami Kaido bike day", status:"locked",
+      anchors:[
+        { time:"08:00", title:"Rent bikes near Onomichi Port", hard:false, note:"~¥2,000/day — half-day pricing unconfirmed, ask at the counter. Terminal opening hours also unconfirmed. Earlier start than yesterday ON PURPOSE: 30–35°C at 70%+ humidity, get the riding done before midday." },
+        { time:"08:20", title:"Ferry to Mukaishima", hard:false, note:"¥110. 1-min pedal from the rental terminal to the port." },
+        { time:"17:00", title:"Dinner — Tamaganzo", hard:false, note:"Fixed to tonight because WHARF is closed Wednesdays and today IS Wednesday." },
+      ],
+      candidates:[
+        { id:"act-shimanami", bucket:"activity", title:"Shimanami Kaido — Mukaishima → Innoshima and back", walk:"08:30–11:30, ~3–4h door to door", cost:"~¥2,000 bike + ¥110 ferry",
+          tags:["cycling","nature","hike"], tip:"A half-day taste, NOT the full 70km Imabari route. Perimeter ride to Innoshima Bridge (1,270m, bike toll free through Mar 2026) and back the way you came. The trip's only cycling, and it's the town's namesake.",
+          link:"https://maps.google.com/?q=Shimanami+Kaido+Onomichi" },
+        { id:"food-tamaganzo", bucket:"food", title:"Tamaganzo — dinner", walk:"5 min from Onomichi Stn, no stairs", cost:"¥3,800 / ~$26",
+          tags:["dinner","ocean-view"], tip:"Tabelog 3.33 (94). Ocean-view brick building. 'Food only' course clears budget.",
+          link:"https://maps.google.com/?q=Tamaganzo+Onomichi" },
+      ],
+      bench:[
+        { replaces:"act-shimanami", alt:"EXTENSION — Innoshima Park / Mt. Tenguyama (207m) summit hike", why:"On the SAME island the ride already reaches, so it's an extension not a new outing. Adds ~1.5–2h. Only if the bike leg is going fast and energy is genuinely high — would give a second 'hike' beyond Minoh." },
+        { replaces:"act-shimanami", alt:"AFTERNOON (13:00–17:00) — Onomichi U2, if unused yesterday", why:"Walkable, casual, asks nothing of legs that just cycled." },
+        { replaces:"act-shimanami", alt:"AFTERNOON — Hondori arcade, as a last-chance souvenir errand", why:"The ONE exception to the no-third-arcade rule: this is genuinely the last chance before tomorrow's move-out. Errand, not a planned block." },
+        { replaces:"act-shimanami", alt:"AFTERNOON — rest", why:"Default lean after a morning of physical activity in the heat." },
+      ],
+      notes:"Last full Onomichi day. Pack tonight for tomorrow's move-out. The suitcase should already have gone ahead to NOHGA Tokyo — drop it at Yamato Shotengai or a konbini if it hasn't." },
+
+    /* ═══════════════ Aug 20 ═══════════════ */
+    { date:"2026-08-20", stayId:"stay-ueno", title:"Onomichi → Tokyo", status:"locked",
+      anchors:[
+        { time:"10:00", title:"Checkout", hard:true, note:"" },
+        { time:"11:30", title:"Taxi → Shin-Onomichi", hard:true, note:"~10 min. The one transfer with no slack behind it — leave 35–50 min of buffer." },
+        { time:"12:21", title:"Shin-Onomichi → Tokyo", hard:true, note:"KODAMA948 → Okayama → NOZOMI24. Arrives Tokyo 16:15." },
+        { time:"18:30", title:"Dinner — Yakitori Ueno Bunraku", hard:false, note:"WALK-IN ONLY, no reservations. CASH / e-money only — no credit cards. Suits an arrival evening with uncertain timing." },
+      ],
+      candidates:[
+        { id:"food-bunraku", bucket:"food", title:"Yakitori Ueno Bunraku — dinner", walk:"2 min from Ueno Stn", cost:"¥1,000–2,999",
+          tags:["dinner","yakitori","no-reservation","cash-only"], tip:"Tabelog 3.49 (774) — the best-rated AND best-reviewed restaurant found anywhere in this trip's entire search.",
+          link:"https://maps.google.com/?q=Yakitori+Ueno+Bunraku" },
+      ],
+      bench:[
+        { replaces:"food-bunraku", alt:"Nonchan Ameyoko ten — 1 min from Ueno Stn · Tabelog 3.19 (106) · reservable · ¥1,200–5,000", why:"If Bunraku's walk-in queue is long. It's also Aug 22's pick, so using it tonight means finding something else then." },
+        { replaces:"food-bunraku", alt:"Ueno Yokocho — Tabelog 3.09 (94)", why:"Third option, rated lowest of the three Ueno finds. Only if both above fail." },
+      ],
+      notes:"Arrives Tokyo 16:15 — evening only, no real day here." },
+
+    /* ═══════════════ Aug 21 ═══════════════ */
+    { date:"2026-08-21", stayId:"stay-ueno", title:"Ueno — museum, Toshogu, Yanaka Ginza", status:"locked",
+      anchors:[
+        { time:"19:00", title:"Yakiniku Motoyama Honten — THE splurge dinner", hard:true, note:"Locked Aug 8. Tabelog 3.40 (378) — strongest review profile of the trip. A5 wagyu. Nagomi course ¥7,788 / ~$52pp, 19 dishes, 2h all-you-can-drink. 1–2 min from Okachimachi Stn, next door to NOHGA. Pay-online Tabelog booking." },
+      ],
+      candidates:[
+        { id:"act-tnm", bucket:"activity", title:"Tokyo National Museum — Honkan building", walk:"~10 min from NOHGA, in Ueno Park", cost:"¥1,000",
+          tags:["museum","indoor","morning"], tip:"Morning, budget 2–3h. Japan's oldest and largest museum: samurai swords and armour, Buddhist sculpture, ukiyo-e, kimono. FRIDAY — open till 20:00 instead of 17:00, so a long morning is fine.",
+          link:"https://maps.google.com/?q=Tokyo+National+Museum" },
+        { id:"act-ueno-toshogu", bucket:"activity", title:"Ueno Toshogu Shrine", walk:"inside Ueno Park — zero extra travel", cost:"¥700",
+          tags:["temple","afternoon"], tip:"30–60 min. Tokugawa-era shrine, gold-leaf shaden, peony garden.",
+          link:"https://maps.google.com/?q=Ueno+Toshogu+Shrine" },
+        { id:"act-yanaka", bucket:"activity", title:"Yanaka Ginza", walk:"~20 min from Ueno, or 5 min from Nippori/Sendagi", cost:"Free",
+          tags:["historic","shitamachi"], tip:"Tokyo's best-preserved old-town. Family-run shops, fried croquettes, traditional sweets, local crafts. Yanaka Cemetery is temple-lined with sakura. Real old-Tokyo character — this is the substance swap that replaced Ameyoko.",
+          link:"https://maps.google.com/?q=Yanaka+Ginza" },
+        { id:"food-motoyama", bucket:"food", title:"Yakiniku Motoyama Honten", walk:"1–2 min from Okachimachi Stn", cost:"¥7,788 / ~$52pp",
+          tags:["dinner","wagyu","locked","splurge"], tip:"The trip's ONE splurge. 19:00. Nagomi course.",
+          link:"https://maps.google.com/?q=Yakiniku+Motoyama+Honten+Ueno" },
+      ],
+      bench:[
+        { replaces:"act-yanaka", alt:"Nezu Shrine — short walk further from Yanaka", why:"Torii-gate tunnel and a garden. Only if there's still time and daylight after Yanaka Ginza." },
+        { replaces:"act-yanaka", alt:"Ameyoko — 5-min detour from the park", why:"DROPPED as a plan (it'd be the trip's 3rd bargain-market block). Keep it only as a quick detour if a specific last-minute souvenir is needed." },
+        { replaces:"act-tnm", alt:"LUNCH, still open — Pontahonke (tonkatsu, among Ueno's best 3) · Torikei Ueno Hiro Koji (yakitori, top-100 six years running) · Niku no Ohyama (butcher-run, cheap) · Taimeiken (omurice, inside Ueno Stn) · Hachinoki (all-you-can-eat meat)", why:"Five candidates, none picked. Natural to grab something at the shrine→Yanaka transition. Keep it light — Motoyama is 19 courses." },
+      ],
+      notes:"The one genuinely free day, and it's now full. Ameyoko was deliberately swapped out for Toshogu + Yanaka Ginza — more substance, and it avoided a third bargain-market block." },
+
+    /* ═══════════════ Aug 22 ═══════════════ */
+    { date:"2026-08-22", stayId:"stay-ueno", title:"Last full day", status:"partial",
+      anchors:[
+        { time:"18:00", title:"Dinner — Nonchan Ameyoko ten", hard:false, note:"Reservable, unlike last night's Bunraku. Picked specifically to be a different format so the same neighbourhood doesn't repeat identically." },
+      ],
+      candidates:[
+        { id:"food-nonchan", bucket:"food", title:"Nonchan Ameyoko ten — dinner", walk:"1 min from Ueno Stn", cost:"¥1,200–5,000",
+          tags:["dinner","reservable"], tip:"Tabelog 3.19 (106). All-you-can-drink courses.",
+          link:"https://maps.google.com/?q=Nonchan+Ameyoko+Ueno" },
+        { id:"food-pontahonke", bucket:"food", title:"Pontahonke — tonkatsu lunch", walk:"Ueno", cost:"¥¥",
+          tags:["lunch","local"], tip:"Said to be among Ueno's best three.", link:"https://maps.google.com/?q=Pontahonke+Ueno" },
+        { id:"food-taimeiken", bucket:"food", title:"Taimeiken — omurice, inside Ueno Station", walk:"in the station", cost:"¥",
+          tags:["lunch"], tip:"The zero-effort option on a pack day.", link:"https://maps.google.com/?q=Taimeiken+Ueno+Station" },
+      ],
+      bench:[
+        { replaces:"food-nonchan", alt:"Ueno Yokocho — Tabelog 3.09 (94)", why:"Fallback. Rated lowest of the three Ueno options found." },
+        { replaces:"food-pontahonke", alt:"Torikei Ueno Hiro Koji (yakitori, top-100 six years running) · Niku no Ohyama (butcher-run fried food, cheap) · Hachinoki (50+ yr all-you-can-eat meat)", why:"Three more from the same Ueno shortlist if the first picks are shut or queued." },
+        { replaces:"food-pontahonke", alt:"Ameyoko — last souvenir window", why:"If anything's still unbought, today is the last realistic chance. Narita is early tomorrow." },
+      ],
+      notes:"Pack day. Gap night already booked at the same hotel — no luggage scramble, but not open time either. Narita is early tomorrow." },
+
+    /* ═══════════════ Aug 23 ═══════════════ */
+    { date:"2026-08-23", stayId:null, title:"Fly home", status:"locked",
+      anchors:[
+        { time:"07:00", title:"Ueno → Narita", hard:true, note:"Keisei Skyliner, ~41 min, ~¥3,000. Departs Ueno Stn, 0.2 mi from the hotel." },
+        { time:"09:45", title:"JL 56 Narita → Chicago", hard:true, note:"NARITA, not Haneda. Different airport from arrival." },
+      ], candidates:[], bench:[] },
   ],
 
-  /* ---------- IRREVERSIBLES ----------
-     Things that cost real money or break the trip if missed.  */
+  /* ---------- IRREVERSIBLES ---------- */
   irreversibles: [
-    { id: "irr-maps",      due: "2026-08-09T08:00", title: "Download offline Google Maps", detail: "Tokyo, Osaka, Onomichi, Nikko. Your backstop underground, independent of cellular." },
-    { id: "irr-motoyama",  due: "2026-08-20T12:00", title: "Confirm Yakiniku Motoyama booking", detail: "Aug 21, 7:00 PM, Nagomi course. Being booked via Tabelog — verify it actually went through. The trip's one splurge dinner." },
-    { id: "irr-onomichi",  due: "2026-08-16T12:00", title: "Onomichi self check-in form + passport upload", detail: "Check-in CODE only sends 9am Japan time on Aug 17, and only after this is verified. Do not leave this." },
-    { id: "irr-fwd1",      due: "2026-08-15T12:00", title: "Forward suitcase → Yamato Onomichi Shotengai", detail: "From the Hommachi front desk, HOLD FOR PICKUP. The Airbnb cannot receive a Yamato delivery." },
-    { id: "irr-fwd2",      due: "2026-08-18T17:00", title: "Forward suitcase → NOHGA Ueno", detail: "Drop at Yamato Shotengai or any konbini. NOHGA holds parcels sent ahead of check-in." },
-    { id: "irr-nikko",     due: "2026-08-12T15:26", title: "Nikko return express", detail: "Miss it and the fallback local is 72 min slower." },
-    { id: "irr-nozomi",    due: "2026-08-13T12:18", title: "Nozomi 389 → Shin-Osaka", detail: "Car 2, seats 9-D / 9-E." },
-    { id: "irr-himeji",    due: "2026-08-17T14:19", title: "Himeji → Shin-Onomichi", detail: "NOZOMI153 → KODAMA953." },
-    { id: "irr-return",    due: "2026-08-20T12:21", title: "Shin-Onomichi → Tokyo", detail: "Taxi from the hotel first — allow 35–50 min buffer." },
-    { id: "irr-narita",    due: "2026-08-23T09:45", title: "JL 56 from NARITA", detail: "Not Haneda. Skyliner from Ueno ~41 min." },
+    { id:"irr-maps",      due:"2026-08-09T08:00", title:"Download offline Google Maps", detail:"Tokyo, Osaka, Onomichi, Nikko, Minoo. Your backstop underground, independent of cellular." },
+    { id:"irr-onomichi",  due:"2026-08-16T12:00", title:"Onomichi self check-in form + passport upload", detail:"Check-in CODE only sends 09:00 Japan time on Aug 17, and only after this is verified. Do not leave this." },
+    { id:"irr-nintendo",  due:"2026-08-14T20:00", title:"Nintendo World vs Kurashiki — joint call", detail:"Live contingency. If USJ wins, Aug 15 rebuilds as a half-day and teamLab MOVES to Aug 14. If it goes ahead: book the Area Timed Entry Ticket the moment the park opens — same-day only, sells out by mid-morning in Obon." },
+    { id:"irr-fwd1",      due:"2026-08-16T18:00", title:"Forward suitcase → Yamato Onomichi Shotengai", detail:"From the Hommachi front desk, HOLD FOR PICKUP. The Onomichi hotel cannot receive a Yamato delivery. Fits the Aug 16 afternoon block." },
+    { id:"irr-teamlab",   due:"2026-08-15T20:30", title:"teamLab — LAST ENTRY 20:30", detail:"Doors 19:30–21:30. Nagai Park, Midōsuji direct from Hommachi. Dinner must be early and light." },
+    { id:"irr-fwd2",      due:"2026-08-18T17:00", title:"Forward suitcase → NOHGA Ueno", detail:"Drop at Yamato Shotengai or any konbini. NOHGA holds parcels sent ahead of check-in." },
+    { id:"irr-nikko",     due:"2026-08-12T15:26", title:"Nikko return express", detail:"Miss it and the fallback local is 72 min slower." },
+    { id:"irr-nozomi",    due:"2026-08-13T12:18", title:"Nozomi 389 → Shin-Osaka", detail:"Car 2, seats 9-D / 9-E. Checkout is 11:00, Tokyo Station needs 15–20 min inside it." },
+    { id:"irr-himeji",    due:"2026-08-17T14:19", title:"Himeji → Shin-Onomichi", detail:"NOZOMI153 → KODAMA953. Castle visit has to end in time." },
+    { id:"irr-motoyama",  due:"2026-08-20T12:00", title:"Confirm Yakiniku Motoyama booking", detail:"Aug 21, 19:00, Nagomi course. Pay-online via Tabelog — verify it actually went through. The trip's one splurge." },
+    { id:"irr-return",    due:"2026-08-20T12:21", title:"Shin-Onomichi → Tokyo", detail:"Taxi from the hotel first — allow 35–50 min buffer." },
+    { id:"irr-narita",    due:"2026-08-23T09:45", title:"JL 56 from NARITA", detail:"Not Haneda. Skyliner from Ueno ~41 min." },
   ],
 
   /* ---------- REFERENCE ---------- */
   reference: {
     phrases: [
-      { jp: "すみません",              romaji: "Sumimasen",              en: "Excuse me / sorry / hello-get-attention" },
-      { jp: "ありがとうございます",      romaji: "Arigatou gozaimasu",     en: "Thank you" },
-      { jp: "こんにちは",              romaji: "Konnichiwa",             en: "Hello" },
-      { jp: "おはようございます",        romaji: "Ohayou gozaimasu",       en: "Good morning" },
-      { jp: "お願いします",             romaji: "Onegaishimasu",          en: "Please / I'd like this" },
-      { jp: "英語は大丈夫ですか？",       romaji: "Eigo wa daijoubu desu ka?", en: "Is English okay?" },
-      { jp: "これは何ですか？",          romaji: "Kore wa nan desu ka?",   en: "What is this? (menus)" },
-      { jp: "これをください",            romaji: "Kore o kudasai",         en: "This one, please (+ point)" },
-      { jp: "トイレはどこですか？",       romaji: "Toire wa doko desu ka?", en: "Where's the bathroom?" },
-      { jp: "駅はどこですか？",          romaji: "Eki wa doko desu ka?",   en: "Where's the station?" },
-      { jp: "いくらですか？",            romaji: "Ikura desu ka?",         en: "How much is it?" },
-      { jp: "二人です",                romaji: "Futari desu",            en: "Two people (at a restaurant)" },
-      { jp: "カードは使えますか？",       romaji: "Kaado wa tsukaemasu ka?", en: "Can I use a card?" },
-      { jp: "大丈夫です",              romaji: "Daijoubu desu",          en: "It's fine / no thanks" },
-      { jp: "わかりません",             romaji: "Wakarimasen",            en: "I don't understand" },
-      { jp: "美味しい！",               romaji: "Oishii!",                en: "Delicious!" },
-      { jp: "お会計お願いします",         romaji: "Okaikei onegaishimasu",  en: "Check, please" },
-      { jp: "写真を撮ってもいいですか？",   romaji: "Shashin o totte mo ii desu ka?", en: "May I take a photo?" },
-      { jp: "助けてください",            romaji: "Tasukete kudasai",       en: "Please help me" },
-      { jp: "一 二 三 四 五",           romaji: "ichi ni san shi go",     en: "1 2 3 4 5" },
-      { jp: "六 七 八 九 十",           romaji: "roku shichi hachi kyuu juu", en: "6 7 8 9 10" },
+      { jp:"すみません", romaji:"Sumimasen", en:"Excuse me / sorry / hello-get-attention" },
+      { jp:"ありがとうございます", romaji:"Arigatou gozaimasu", en:"Thank you" },
+      { jp:"こんにちは", romaji:"Konnichiwa", en:"Hello" },
+      { jp:"おはようございます", romaji:"Ohayou gozaimasu", en:"Good morning" },
+      { jp:"お願いします", romaji:"Onegaishimasu", en:"Please / I'd like this" },
+      { jp:"英語は大丈夫ですか？", romaji:"Eigo wa daijoubu desu ka?", en:"Is English okay?" },
+      { jp:"これは何ですか？", romaji:"Kore wa nan desu ka?", en:"What is this? (menus)" },
+      { jp:"これをください", romaji:"Kore o kudasai", en:"This one, please (+ point)" },
+      { jp:"トイレはどこですか？", romaji:"Toire wa doko desu ka?", en:"Where's the bathroom?" },
+      { jp:"駅はどこですか？", romaji:"Eki wa doko desu ka?", en:"Where's the station?" },
+      { jp:"いくらですか？", romaji:"Ikura desu ka?", en:"How much is it?" },
+      { jp:"二人です", romaji:"Futari desu", en:"Two people (at a restaurant)" },
+      { jp:"カードは使えますか？", romaji:"Kaado wa tsukaemasu ka?", en:"Can I use a card?" },
+      { jp:"予約していません", romaji:"Yoyaku shite imasen", en:"We don't have a reservation" },
+      { jp:"大丈夫です", romaji:"Daijoubu desu", en:"It's fine / no thanks" },
+      { jp:"わかりません", romaji:"Wakarimasen", en:"I don't understand" },
+      { jp:"美味しい！", romaji:"Oishii!", en:"Delicious!" },
+      { jp:"お会計お願いします", romaji:"Okaikei onegaishimasu", en:"Check, please" },
+      { jp:"写真を撮ってもいいですか？", romaji:"Shashin o totte mo ii desu ka?", en:"May I take a photo?" },
+      { jp:"助けてください", romaji:"Tasukete kudasai", en:"Please help me" },
+      { jp:"一 二 三 四 五", romaji:"ichi ni san shi go", en:"1 2 3 4 5" },
+      { jp:"六 七 八 九 十", romaji:"roku shichi hachi kyuu juu", en:"6 7 8 9 10" },
     ],
     cards: [
-      {
-        title: "Heat — the defining constraint",
-        body: "30–35°C at 70%+ humidity. A 32°C day feels like 38°C. Outdoors BEFORE 10:00 or AFTER 16:00; indoors midday. Carry water constantly — heatstroke here is a real risk, not a caution. Vending machines are everywhere.",
-      },
-      {
-        title: "Subway — you've never ridden one",
-        body: "Google Maps is the tool, not a Japan-specific app. TAP IN AND TAP OUT, every ride, no exceptions — forgetting to tap out blocks the exit gate. Lines are colour-coded and numbered, signage is bilingual at every major station. Avoid Tokyo weekday 07:30–09:30.",
-      },
-      {
-        title: "Money",
-        body: "Suica via Apple Pay — top up with a foreign card, no physical card needed. Carry ¥30,000–50,000 cash; rural buses, small restaurants and temples are frequently cash-only. 7-Eleven ATMs reliably take foreign cards. No-FX-fee credit card for card-payable spend; the fee-free debit card is the cash source.",
-      },
-      {
-        title: "Obon — Aug 13–16",
-        body: "OPEN: shinkansen, subways, konbini, department stores, malls, chain restaurants. CLOSED: many individually-owned restaurants and small shops, 3–5 days from Aug 13, worse in rural areas. Temples and shrines are at their MOST active — it's their season.",
-      },
-      {
-        title: "Luggage",
-        body: "Takkyubin ¥1,600–3,700/bag. Forward Tokyo→Osaka on Aug 10 or 11, NOT the morning you leave — standard delivery is next-day-to-two-days. Onomichi is an Airbnb: it cannot receive a Yamato delivery, so send hold-for-pickup to the Shotengai branch. Keep passport, valuables, electronics and meds with you always. Coin lockers ¥400–700/day.",
-      },
-      {
-        title: "Non-negotiables",
-        body: "Temple · Hike · See Mt Fuji · Gardens · Nature. Covered: temples (Toshogu, Senkoji, Tōdai-ji), gardens (Hamarikyu), nature (Asuka, Minoh, Onomichi hillside). THIN: dedicated hike — Shimanami Kaido and Minoh Falls are the fallbacks. Fuji rests on the seat-E Shinkansen legs, not on a day trip.",
-      },
+      { title:"Heat — the defining constraint",
+        body:"30–35°C at 70%+ humidity; a 32°C day feels like 38°C. Outdoors BEFORE 10:00 or AFTER 16:00; indoors midday. Carry water constantly — heatstroke here is a real risk, not a caution. This is exactly why Aug 19's bike ride starts at 08:00 and Nara leaves at 07:00." },
+      { title:"Subway — you've never ridden one",
+        body:"Google Maps is the tool, not a Japan-specific app. TAP IN AND TAP OUT, every ride, no exceptions — forgetting to tap out blocks the exit gate. Lines are colour-coded and numbered, signage is bilingual at every major station. Avoid Tokyo weekday 07:30–09:30." },
+      { title:"Money",
+        body:"Suica via Apple Pay — top up with a foreign card, no physical card needed. Carry ¥30,000–50,000 cash; rural buses, small restaurants and temples are frequently cash-only. Yakitori Ueno Bunraku (Aug 20) is CASH/e-money ONLY. 7-Eleven ATMs reliably take foreign cards. No-FX-fee credit card for card-payable spend; the fee-free debit card is the cash source." },
+      { title:"Obon — Aug 13–16",
+        body:"OPEN: shinkansen, subways, konbini, department stores, malls, chain restaurants. CLOSED: many individually-owned restaurants and small shops, 3–5 days from Aug 13, worse in rural areas. Temples and shrines are at their MOST active. Osaka is fine; the countryside would have been the problem, which the Aug 18–20 placement avoids." },
+      { title:"Luggage — three forwards, not one",
+        body:"Takkyubin ¥1,600–3,700/bag. (1) Tokyo→Osaka, drop Aug 10 or 11, NOT the morning you leave. (2) Hommachi→Yamato Onomichi Shotengai, HOLD FOR PICKUP — the Onomichi hotel can't receive a delivery. (3) Onomichi→NOHGA Ueno, drop ~Aug 18. Keep passport, valuables, electronics and meds with you always. Coin lockers ¥400–700/day." },
+      { title:"The flexible Osaka bench",
+        body:"Two items deliberately NOT pinned to a day — pull them in whenever an Osaka gap opens. OBJECT OSAKA: custom-patch shop, Nishishinsaibashi, 5–10 min detour — only when an evening routes through Dotonbori/Shinsaibashi. UDON-MAKING CLASS: IRICOSKY, 90 min, ¥6,820/group, bookable same-day up to 2h ahead — fits any afternoon that turns out freer than planned. Needs to start by 15:30–16:00 to fit before an evening." },
+      { title:"Non-negotiables — the check",
+        body:"Temple · Hike · See Mt Fuji · Gardens · Nature. COVERED: temples (Toshogu, Senkoji, Tōdai-ji, Kasuga Taisha, Katsuoji, Ueno Toshogu). Hike — Minoh Falls (Aug 16), plus Shimanami cycling and the optional Mt. Tenguyama extension. Gardens — Hamarikyu, Nakanoshima, Korakuen, teamLab Botanical. Nature — Minoh, Nikko falls, the Seto Inland Sea. FUJI rests entirely on the two seat-E Shinkansen legs; Nikko is north and offers no view." },
+      { title:"What got deliberately skipped",
+        body:"Golf (no slot near a course). Second skyview (Shinjuku's free deck covers it). Shibuya Crossing (dedicated subway trip, schedule's full). Dedicated arcade blocks in Osaka and a third in Onomichi (Shinjuku + Yanaka Ginza already cover the type twice). Onomichi's 25-temple Trail (would be a 4th temple). The RESTAURANT at U2 (¥6,600, too expensive). None of these are oversights — each was weighed and dropped." },
     ],
   },
 
-  /* ---------- CONFIRMATION FIELD LABELS ----------
-     Values live ONLY on the device. This is just the shape.   */
   confirmationFields: [
-    { key: "jal",       label: "JAL booking" },
-    { key: "parkhotel", label: "Park Hotel Tokyo" },
-    { key: "hommachi",  label: "Miyako City Hommachi" },
-    { key: "onomichi",  label: "Onomichi Yutori" },
-    { key: "nohga",     label: "NOHGA Ueno" },
-    { key: "nohga2",    label: "NOHGA gap night" },
-    { key: "sx13",      label: "smartEX — Aug 13" },
-    { key: "sx17",      label: "smartEX — Aug 17" },
-    { key: "sx20",      label: "smartEX — Aug 20" },
+    { key:"jal",       label:"JAL booking" },
+    { key:"parkhotel", label:"Park Hotel Tokyo" },
+    { key:"hommachi",  label:"Miyako City Hommachi" },
+    { key:"onomichi",  label:"Onomichi Yutori" },
+    { key:"nohga",     label:"NOHGA Ueno" },
+    { key:"nohga2",    label:"NOHGA gap night" },
+    { key:"sx13",      label:"smartEX — Aug 13" },
+    { key:"sx17",      label:"smartEX — Aug 17" },
+    { key:"sx20",      label:"smartEX — Aug 20" },
   ],
 };
