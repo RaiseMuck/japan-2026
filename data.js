@@ -148,6 +148,7 @@ const TRIP = {
       bench:[
         { replaces:"act-nakanoshima", alt:"Dobuike Street — in Hommachi itself, 0 transit", why:"Lower-effort fallback if the legs are done after the travel day. Narrow streets, vintage shops, street art. Browse-only, no purchase needed to make it worth the walk." },
         { replaces:"act-nakanoshima", alt:"Just rest at the hotel", why:"Legitimate option — this is explicitly a mood call, and tomorrow is a 06:45 Nara start." },
+        { replaces:"act-nakanoshima", alt:"Osaka Aquarium KAIYUKAN — Hommachi → Chuo Line → Osakako, ~22 min + 5 min walk, ~¥280 · ¥2,400 · last entry 19:00", why:"The 15:15–18:00 gap is long enough for it, and it's indoor + air-conditioned after a travel day. Aug 14 and Aug 16 afternoons work too — take whichever day has the most energy left." },
         { replaces:"food-gotto", alt:"Kuroge Wagyu Ittogai Yakiniku Mitsuru — Shinsaibashi, 2 min from Shinsaibashi Stn · Tabelog 3.33 (208) · ¥4,400 / ~$30", why:"Only worth it if the evening ends up routing through Dotonbori/Shinsaibashi anyway. Yakiniku instead of sashimi/izakaya." },
       ],
       notes:"First day of Obon. Suitcase already forwarded — daypack only. Osaka Castle is explicitly OFF for arrival day: real landmark, wrong day. After dinner, a short Dotonbori walk either way for the canal and neon — keep it short, 06:45 start tomorrow." },
@@ -231,6 +232,7 @@ const TRIP = {
       bench:[
         { replaces:"food-yamanoya", alt:"GOTTO Sakaba Bingomachi — 3 min from Hommachi Stn · Tabelog rated · from ¥3,500 / ~$24", why:"Fallback if Yamano Ya's sake-heavy sashimi format doesn't appeal, or if it's full. Both clear budget easily." },
         { replaces:"act-katsuoji", alt:"Object Osaka — custom-patch shop, Nishishinsaibashi · 5–10 min detour", why:"Flexible Osaka bench item. Only fits if the evening routes through Dotonbori/Shinsaibashi instead of staying near Hommachi." },
+        { replaces:"act-katsuoji", alt:"AFTERNOON GAP — Osaka Aquarium KAIYUKAN · 10:00–20:00, last entry 19:00 · ¥2,400 wkdy / ¥2,700 peak", why:"Fits the 14:00–18:00 block cleanly. Hommachi → Chuo Line → Osakako, ~22 min total + 5 min walk, ~¥280. One of the world's largest aquariums (whale sharks). Also fits Aug 13's or Aug 14's afternoon gap if this day runs long." },
       ],
       notes:"Swapped in for Asuka on Aug 8 — both of these were asked for by name; Asuka was picked by process of elimination. The 14:00–18:00 block is where the Takkyubin suitcase-forward errand goes (front desk → Yamato Onomichi Shotengai) — a quick stop, rest of the block is genuinely free." },
 
@@ -362,13 +364,16 @@ const TRIP = {
           tags:["lunch","local"], tip:"Said to be among Ueno's best three.", link:"https://maps.google.com/?q=Pontahonke+Ueno" },
         { id:"food-taimeiken", bucket:"food", title:"Taimeiken — omurice, inside Ueno Station", walk:"in the station", cost:"¥",
           tags:["lunch"], tip:"The zero-effort option on a pack day.", link:"https://maps.google.com/?q=Taimeiken+Ueno+Station" },
+        { id:"act-sumida-aq", bucket:"activity", title:"Sumida Aquarium — the AMANO one", walk:"~15 min from Ueno (Ginza Line via Asakusa)", cost:"~¥2,500",
+          tags:["aquarium","aquascaping","indoor"], tip:"Floors 5–6 of Tokyo Skytree. Takashi Amano designed the nature aquariums here — ONE OF ONLY THREE aquariums worldwide with ADA-designed tanks (the others are Lisbon and Sapporo). Called the 'Mecca of plant tankers.' Indoor, so it works in heat or rain. ⚠ Confirm hours on the day — not verified.",
+          link:"https://maps.google.com/?q=Sumida+Aquarium+Tokyo+Skytree" },
       ],
       bench:[
         { replaces:"food-nonchan", alt:"Ueno Yokocho — Tabelog 3.09 (94)", why:"Fallback. Rated lowest of the three Ueno options found." },
         { replaces:"food-pontahonke", alt:"Torikei Ueno Hiro Koji (yakitori, top-100 six years running) · Niku no Ohyama (butcher-run fried food, cheap) · Hachinoki (50+ yr all-you-can-eat meat)", why:"Three more from the same Ueno shortlist if the first picks are shut or queued." },
         { replaces:"food-pontahonke", alt:"Ameyoko — last souvenir window", why:"If anything's still unbought, today is the last realistic chance. Narita is early tomorrow." },
       ],
-      notes:"Pack day. Gap night already booked at the same hotel — no luggage scramble, but not open time either. Narita is early tomorrow." },
+      notes:"Pack day, but genuinely light — this is the natural slot for SUMIDA AQUARIUM (the Amano/ADA nature aquarium at Skytree), ~15 min from Ueno. Gap night already booked at the same hotel, so no luggage scramble. Narita is early tomorrow." },
 
     /* ═══════════════ Aug 23 ═══════════════ */
     { date:"2026-08-23", stayId:null, title:"Fly home", status:"locked",
