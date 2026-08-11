@@ -77,12 +77,22 @@ const TRIP = {
         { replaces:"food-underpass", alt:"Uokin — Shimbashi izakaya alley, 5 min", why:"If the whole Underpass Alley is packed. Standout seafood izakaya, separate strip under the train tracks." },
         { replaces:"food-underpass", alt:"ROUTE FALLBACK — Tokyo Monorail → Hamamatsucho → JR Yamanote → Shimbashi", why:"Only if Keikyu is disrupted. This one HAS a transfer at Hamamatsucho, then one stop on the Yamanote to Shimbashi. Slower and more steps with luggage — Keikyu direct is the better default." },
       ],
-      notes:"Check-in-and-eat evening. Do not plan anything real — you land at 17:30 after 13 hours in the air." },
+      notes:"⚠ ACTUAL: flight delayed ~6h. Landed ~23:30, at the hotel 01:00 Aug 11. Trains and buses had stopped — taxi from Haneda, ¥9,000. Visit Japan Web worked and saved ~30 min at immigration. Not a planning miss; a 1am arrival has no train option." },
 
     /* ═══════════════ Aug 11 ═══════════════ */
-    { date:"2026-08-11", stayId:"stay-shiodome", title:"Shinjuku day", status:"locked",
-      anchors:[],
+    { date:"2026-08-11", stayId:"stay-shiodome", title:"Harajuku + Shinjuku", status:"locked",
+      anchors:[
+        { time:"11:30", title:"Out the door — late start is fine today", hard:false, note:"After a 01:00 arrival. Nothing today has a morning deadline." },
+        { time:"12:00", title:"HARAJUKU FIRST — Yamanote, 2 stops from Shinjuku (~5 min)", hard:false, note:"⚠ ORDER FLIPPED ON PURPOSE. Brandy Melville closes 19:00 — that's the ONLY hard deadline today. Everything in Shinjuku (deck, Omoide, Don Quijote) runs late. Do the thing with a clock on it first." },
+        { time:"15:00", title:"Move up to Shinjuku", hard:false, note:"Yamanote back north, ~5 min. Rest of the day is deadline-free." },
+      ],
       candidates:[
+        { id:"act-brandy", bucket:"activity", title:"Brandy Melville Harajuku — Kate's pick", walk:"Harajuku Stn, 3-29-5 Jingumae", cost:"¥¥",
+          tags:["shopping","clothes","hard-close"], tip:"OPEN 11:00–19:00 — the day's only deadline. Three floors: basement is bags and accessories. Known for queues, and today is a national holiday so expect weekend-level crowds.",
+          link:"https://maps.google.com/?q=Brandy+Melville+Harajuku" },
+        { id:"act-takeshita", bucket:"activity", title:"Takeshita Street + Harajuku", walk:"at Harajuku Stn", cost:"¥",
+          tags:["shopping","clothes"], tip:"THE backup if Brandy Melville is queued out the door — the whole neighbourhood is clothes. Omotesando next door covers the higher end. A crowded store doesn't waste the trip.",
+          link:"https://maps.google.com/?q=Takeshita+Street+Harajuku" },
         { id:"act-tmg", bucket:"activity", title:"Tokyo Metropolitan Gov't Building — observation deck", walk:"8 min from Shinjuku Stn", cost:"Free",
           tags:["skyview"], tip:"The trip's one skyview. Free — beats Shibuya Sky ($16–24) on price and clears the $15pp cap.",
           link:"https://maps.google.com/?q=Tokyo+Metropolitan+Government+Building" },
@@ -100,7 +110,7 @@ const TRIP = {
         { replaces:"food-omoide", alt:"Kuu Nishishinjuku — Tabelog 3.44 (559) · ¥5,000–6,600 / ~$37–46pp", why:"Best-rated find of the whole search, but courses run over budget. Advertises a '¥3,500 and up' option — you'd have to ask for it directly at the door." },
         { replaces:"food-omoide", alt:"Kizuna Sushi Kabukicho — Tabelog 3.47 (1,068) · ¥5,000 / ~$34pp", why:"Most-reviewed restaurant found anywhere on this trip. Just over the cap — a stretch, not a clears-budget pick." },
       ],
-      notes:"~38 min total walking across the whole route. Dinner budget was recut to $32pp on Aug 8 — the trip affords ONE splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten and Azabu are both off." },
+      notes:"⚠ AUG 11 IS MOUNTAIN DAY — a Japanese national holiday. Harajuku will be busy; get there as early as you manage. Order deliberately flipped: Harajuku (19:00 close) before Shinjuku (nothing closes). Dinner budget was recut to $32pp on Aug 8 — the trip affords ONE splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten and Azabu are both off." },
 
     /* ═══════════════ Aug 12 ═══════════════ */
     { date:"2026-08-12", stayId:"stay-shiodome", title:"Nikko day trip", status:"locked",
@@ -112,15 +122,19 @@ const TRIP = {
       candidates:[
         { id:"act-toshogu", bucket:"activity", title:"Toshogu Shrine", walk:"Nikko town core", cost:"Incl. in pass",
           tags:["temple","morning"], tip:"Go first, before the tour buses.", link:"https://maps.google.com/?q=Nikko+Toshogu" },
-        { id:"act-kegon", bucket:"activity", title:"Kegon Falls + Akechidaira Ropeway", walk:"bus to Chuzenji", cost:"Incl. in pass",
-          tags:["nature"], tip:"Ryuzu Falls on the way back down.", link:"https://maps.google.com/?q=Kegon+Falls" },
+        { id:"act-kegon", bucket:"activity", title:"Kegon Falls + Akechidaira Ropeway — VERSION A", walk:"bus to Chuzenji", cost:"Incl. in pass",
+          tags:["nature","sightseeing"], tip:"The sightseeing day. Ryuzu Falls on the way back down.", link:"https://maps.google.com/?q=Kegon+Falls" },
+        { id:"act-senjogahara", bucket:"activity", title:"Senjogahara boardwalk hike — VERSION B", walk:"bus past Kegon to Yudaki Falls", cost:"Incl. in pass",
+          tags:["hike","nature","cool"], tip:"6 km flat wooden boardwalk, Yudaki Falls → Ryuzu Falls, ~3h (2h if you stop at Akanuma). Almost no climbing. AT 1,400m — the only genuinely cool outdoor thing on this trip. Ends at Ryuzu, which was already on the plan, and it's all on the All Area Pass bus route. THE trip's real hike.",
+          link:"https://maps.google.com/?q=Senjogahara+Nikko" },
         { id:"food-kanaya", bucket:"food", title:"Nikko Kanaya Hotel — LUNCH not dinner", walk:"Nikko town", cost:"¥¥",
           tags:["lunch"], tip:"Moved to lunch specifically to fit the return train. The '100-year curry' is real, and so is Purin-tei's 3 Era Pudding.",
           link:"https://maps.google.com/?q=Nikko+Kanaya+Hotel" },
       ],
       bench:[
         { replaces:"food-kanaya", alt:"Purin-tei — Nikko town · '3 Era Pudding' tasting", why:"If Kanaya's dining room is full or slow. Dessert-forward, quick, and it's the other thing you specifically remembered about Nikko." },
-        { replaces:"act-kegon", alt:"EXTRA TIME — Ryuzu Falls + Lake Chuzenji shoreline on the way back down", why:"The 17:22/17:44 correction bought ~2 hours. This is the natural place to spend it, and it's already on the bus route back from Kegon." },
+        { replaces:"act-kegon", alt:"⚑ THE FORK — pick Version A or B on the morning, based on how you slept", why:"A = Toshogu unhurried + Kegon + ropeway + Ryuzu + Kanaya lunch (sightseeing). B = Toshogu quick + bus to Yudaki + 3h Senjogahara boardwalk to Ryuzu + Kanaya lunch (hiking). You cannot do both. B is what the 17:22/17:44 train correction bought — but it's a 06:30 start on limited sleep, so decide it Wednesday morning, not in advance." },
+        { replaces:"act-kegon", alt:"EXTRA TIME — Ryuzu Falls + Lake Chuzenji shoreline", why:"If you take Version A, this is where the recovered 2 hours go. Already on the bus route back." },
         { replaces:"act-toshogu", alt:"IF RUNNING LATE — skip the 17:22, take the 17:44", why:"22 minutes of slack that costs nothing. Only fall past 17:44 if something has genuinely gone wrong — the next options are 3h+ with transfers." },
       ],
       notes:"⚠ CORRECTED Aug 8: the old plan said 15:26 was the last express — that came from a SATURDAY timetable used as a proxy and it was wrong. A live Wednesday check shows expresses at 17:22 and 17:44. You have ~2 MORE HOURS in Nikko than the earlier plan assumed, so Chuzenji no longer has to be rushed and Kanaya can be a real sit-down lunch. All Area Pass ¥8,000/adult — NOT the ¥3,000 World Heritage pass, which doesn\'t reach Chuzenji. No Fuji view from Nikko; Fuji rests on the seat-E Shinkansen legs." },
@@ -364,8 +378,8 @@ const TRIP = {
           tags:["lunch","local"], tip:"Said to be among Ueno's best three.", link:"https://maps.google.com/?q=Pontahonke+Ueno" },
         { id:"food-taimeiken", bucket:"food", title:"Taimeiken — omurice, inside Ueno Station", walk:"in the station", cost:"¥",
           tags:["lunch"], tip:"The zero-effort option on a pack day.", link:"https://maps.google.com/?q=Taimeiken+Ueno+Station" },
-        { id:"act-sumida-aq", bucket:"activity", title:"Sumida Aquarium — the AMANO one", walk:"~15 min from Ueno (Ginza Line via Asakusa)", cost:"~¥2,500",
-          tags:["aquarium","aquascaping","indoor"], tip:"Floors 5–6 of Tokyo Skytree. Takashi Amano designed the nature aquariums here — ONE OF ONLY THREE aquariums worldwide with ADA-designed tanks (the others are Lisbon and Sapporo). Called the 'Mecca of plant tankers.' Indoor, so it works in heat or rain. ⚠ Confirm hours on the day — not verified.",
+        { id:"act-sumida-aq", bucket:"activity", title:"Sumida Aquarium — the AMANO one ⚑ THE DAY'S ANCHOR", walk:"~15 min from Ueno (Ginza Line via Asakusa)", cost:"~¥2,500",
+          tags:["aquarium","aquascaping","indoor","anchor"], tip:"✅ HOURS CONFIRMED — Aug 22 is a SATURDAY: 09:00–21:00, LAST ENTRY 20:00. The most generous hours of any day you could have gone. Floors 5–6 of Tokyo Skytree. Takashi Amano designed the nature aquariums — ONE OF ONLY THREE worldwide with ADA-designed tanks (others: Lisbon, Sapporo). The 'Mecca of plant tankers.' Indoor, so weather is irrelevant.",
           link:"https://maps.google.com/?q=Sumida+Aquarium+Tokyo+Skytree" },
       ],
       bench:[
@@ -373,7 +387,7 @@ const TRIP = {
         { replaces:"food-pontahonke", alt:"Torikei Ueno Hiro Koji (yakitori, top-100 six years running) · Niku no Ohyama (butcher-run fried food, cheap) · Hachinoki (50+ yr all-you-can-eat meat)", why:"Three more from the same Ueno shortlist if the first picks are shut or queued." },
         { replaces:"food-pontahonke", alt:"Ameyoko — last souvenir window", why:"If anything's still unbought, today is the last realistic chance. Narita is early tomorrow." },
       ],
-      notes:"Pack day, but genuinely light — this is the natural slot for SUMIDA AQUARIUM (the Amano/ADA nature aquarium at Skytree), ~15 min from Ueno. Gap night already booked at the same hotel, so no luggage scramble. Narita is early tomorrow." },
+      notes:"SUMIDA AQUARIUM is this day's anchor. Saturday hours (09:00–21:00) are the best of any candidate day, and the day is otherwise light. NOTE: Aug 12 was checked and RULED OUT — Skytree is right by Asakusa but weekday last entry is 19:00 and you arrive 19:29. Don't try it on the day. Gap night already booked at the same hotel. Narita is early tomorrow." },
 
     /* ═══════════════ Aug 23 ═══════════════ */
     { date:"2026-08-23", stayId:null, title:"Fly home", status:"locked",
@@ -393,6 +407,7 @@ const TRIP = {
     { id:"irr-nozomi",    due:"2026-08-13T12:18", title:"Nozomi 389 → Shin-Osaka", detail:"Car 2, seats 9-D / 9-E. Checkout is 11:00, Tokyo Station needs 15–20 min inside it." },
     { id:"irr-himeji",    due:"2026-08-17T14:19", title:"Himeji → Shin-Onomichi", detail:"NOZOMI153 → KODAMA953. Castle visit has to end in time." },
     { id:"irr-return",    due:"2026-08-20T12:21", title:"Shin-Onomichi → Tokyo", detail:"Taxi from the hotel first — allow 35–50 min buffer." },
+    { id:"irr-glasses",   due:"2026-08-22T12:00", title:"Ray-Ban Meta glasses — get them shipped back", detail:"They were left in Ohio. Rental return is due Aug 25 (LensProToGo). Ask whoever can reach them to ship them back on time so the $93 doesn't become a late fee too." },
     { id:"irr-narita",    due:"2026-08-23T09:45", title:"JL 56 from NARITA", detail:"Not Haneda. Skyliner from Ueno ~41 min." },
     { id:"irr-weather",   due:"2026-08-16T12:00", title:"Check the typhoon forecast for Aug 17–23", detail:"Risk rises in the back half. Aug 19's Shimanami bike day is the weather-dependent one — Onomichi U2 and the Motion Picture Museum are the wet-weather swaps." },
   ],
