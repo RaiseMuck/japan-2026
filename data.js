@@ -82,7 +82,8 @@ const TRIP = {
     /* ═══════════════ Aug 11 ═══════════════ */
     { date:"2026-08-11", stayId:"stay-shiodome", title:"Harajuku + Shinjuku", status:"locked",
       anchors:[
-        { time:"11:30", title:"Out the door — late start is fine today", hard:false, note:"After a 01:00 arrival. Nothing today has a morning deadline." },
+        { time:"11:00", title:"⚑ FRONT DESK — forward the suitcase to Osaka", hard:true, note:"DO THIS BEFORE YOU LEAVE. Say: 宅急便でこの荷物を大阪のホテルに送りたいです (Takkyubin de kono nimotsu o Osaka no hoteru ni okuritai desu). Show them: MIYAKO CITY OSAKA HOMMACHI, check-in Aug 13. They fill the form. ¥1,600–3,700. Keep the receipt/tracking slip. Pack a daypack with what you need for Aug 11–13 — you won't see this bag until Osaka." },
+        { time:"11:30", title:"Out the door — late start is fine today", hard:false, note:"After a 01:00 arrival. Nothing else today has a morning deadline." },
         { time:"12:00", title:"HARAJUKU FIRST — Yamanote, 2 stops from Shinjuku (~5 min)", hard:false, note:"⚠ ORDER FLIPPED ON PURPOSE. Brandy Melville closes 19:00 — that's the ONLY hard deadline today. Everything in Shinjuku (deck, Omoide, Don Quijote) runs late. Do the thing with a clock on it first." },
         { time:"15:00", title:"Move up to Shinjuku", hard:false, note:"Yamanote back north, ~5 min. Rest of the day is deadline-free." },
       ],
@@ -110,7 +111,7 @@ const TRIP = {
         { replaces:"food-omoide", alt:"Kuu Nishishinjuku — Tabelog 3.44 (559) · ¥5,000–6,600 / ~$37–46pp", why:"Best-rated find of the whole search, but courses run over budget. Advertises a '¥3,500 and up' option — you'd have to ask for it directly at the door." },
         { replaces:"food-omoide", alt:"Kizuna Sushi Kabukicho — Tabelog 3.47 (1,068) · ¥5,000 / ~$34pp", why:"Most-reviewed restaurant found anywhere on this trip. Just over the cap — a stretch, not a clears-budget pick." },
       ],
-      notes:"⚠ AUG 11 IS MOUNTAIN DAY — a Japanese national holiday. Harajuku will be busy; get there as early as you manage. Order deliberately flipped: Harajuku (19:00 close) before Shinjuku (nothing closes). Dinner budget was recut to $32pp on Aug 8 — the trip affords ONE splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten and Azabu are both off." },
+      notes:"⚑ FORWARD THE SUITCASE AT THE FRONT DESK BEFORE YOU GO OUT — today is the last day that works. ⚠ AUG 11 IS MOUNTAIN DAY — a Japanese national holiday, so Takkyubin may run a day slower; another reason to drop it early rather than this evening. Harajuku will be busy; get there as early as you manage. Order deliberately flipped: Harajuku (19:00 close) before Shinjuku (nothing closes). Dinner budget was recut to $32pp on Aug 8 — the trip affords ONE splurge and that's Motoyama on Aug 21, so Sushi Tokyo Ten and Azabu are both off." },
 
     /* ═══════════════ Aug 12 ═══════════════ */
     { date:"2026-08-12", stayId:"stay-shiodome", title:"Nikko day trip", status:"locked",
@@ -399,6 +400,7 @@ const TRIP = {
 
   /* ---------- IRREVERSIBLES ---------- */
   irreversibles: [
+    { id:"irr-fwd0",      due:"2026-08-11T17:00", title:"⚑ FORWARD SUITCASE → OSAKA — TODAY", detail:"Park Hotel front desk, on your way out. Takkyubin (宅急便) to Miyako City Osaka Hommachi, arriving Aug 12–13 — they hold it. ¥1,600–3,700. TODAY IS THE LAST PRACTICAL DAY: tomorrow you're in Nikko 06:30–19:30 and a drop then lands Aug 13–14, after you arrive. If you miss it, carry the bag on the Nozomi instead — fine IF it's under 160cm total (H+W+D); over that needs an oversized seat you don't have booked." },
     { id:"irr-fwd1",      due:"2026-08-16T18:00", title:"Forward suitcase → Yamato Onomichi Shotengai", detail:"From the Hommachi front desk, HOLD FOR PICKUP. The Onomichi hotel cannot receive a Yamato delivery. Fits the Aug 16 afternoon block." },
     { id:"irr-teamlab",   due:"2026-08-15T20:30", title:"teamLab — LAST ENTRY 20:30", detail:"Doors 19:30–21:30. Nagai Park, Midōsuji direct from Hommachi. Dinner must be early and light." },
     { id:"irr-fwd2",      due:"2026-08-18T17:00", title:"Forward suitcase → NOHGA Ueno", detail:"Drop at Yamato Shotengai or any konbini. NOHGA holds parcels sent ahead of check-in." },
